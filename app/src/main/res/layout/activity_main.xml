@@ -47,4 +47,16 @@
         android:textColor="@color/colorTextIcons"
         android:textSize="20sp" />
 
+    <EditText
+        android:id="@+id/nameEditText"
+        style="@android:style/Widget.DeviceDefault.EditText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:background="@color/colorTextIcons"
+        android:ems="10"
+        android:hint="Enter Name"
+        android:inputType="textPersonName"
+        android:padding="5sp" />
+
 </RelativeLayout>
