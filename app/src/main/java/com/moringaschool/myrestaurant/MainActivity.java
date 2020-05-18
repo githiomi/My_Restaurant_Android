@@ -10,22 +10,23 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 public class MainActivity extends AppCompatActivity {
 
     public static final String TAG = MainActivity.class.getSimpleName();
 
-
-    private Button mFindRestaurantsButton;
-    private EditText mUsername;
+    @BindView(R.id.nameEditText) EditText mUsername;
+    @BindView(R.id.findRestaurantsButton) Button mFindRestaurantsButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        mUsername = (EditText) findViewById(R.id.nameEditText);
+        ButterKnife.bind(this);
 
-        mFindRestaurantsButton = (Button) findViewById(R.id.findRestaurantsButton);
-            mFindRestaurantsButton.setOnClickListener(new View.OnClickListener() {
+        mFindRestaurantsButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
 
