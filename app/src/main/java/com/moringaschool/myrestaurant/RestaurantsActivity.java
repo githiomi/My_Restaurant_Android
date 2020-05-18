@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -42,6 +43,7 @@ public class RestaurantsActivity extends AppCompatActivity {
                 @Override
                 public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                     String restaurant = ((TextView)view).getText().toString();
+                    Log.v(TAG, "In the On Item CLick Listener");
                     Toast.makeText(RestaurantsActivity.this, restaurant, Toast.LENGTH_LONG).show();
                 }
             });
@@ -49,6 +51,8 @@ public class RestaurantsActivity extends AppCompatActivity {
         final Intent intent = getIntent();
         final String name = intent.getStringExtra("name");
         mNameView.setText(name + ", these are closest you!");
+
+        Log.d(TAG, "In the on create method");
 
 
     }
