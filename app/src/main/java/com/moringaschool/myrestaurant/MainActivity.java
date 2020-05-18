@@ -32,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
                     String name = mUsername.getText().toString();
                     Log.d(TAG, name);
                     intent.putExtra("name", name);
-//                    Toast.makeText(MainActivity.this, "Welcome, " + name, Toast.LENGTH_LONG).show();
+                    Toast.makeText(MainActivity.this, "Welcome, " + name, Toast.LENGTH_LONG).show();
                 }
             });
     }

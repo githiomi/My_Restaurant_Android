@@ -22,7 +22,8 @@
         android:fontFamily="monospace"
         android:text="My Restaurants"
         android:textColor="@color/colorTextIcons"
-        android:textSize="40sp" />
+        android:textSize="40sp"
+        android:id="@+id/appNameTextView"   />
 
     <Button
         android:id="@+id/findRestaurantsButton"
