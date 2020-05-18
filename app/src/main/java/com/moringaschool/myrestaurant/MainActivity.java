@@ -26,13 +26,16 @@ public class MainActivity extends AppCompatActivity {
             mFindRestaurantsButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(MainActivity.this, RestaurantsActivity.class);
-                    startActivity(intent);
 
                     String name = mUsername.getText().toString();
                     Log.d(TAG, name);
-                    intent.putExtra("name", name);
+
                     Toast.makeText(MainActivity.this, "Welcome, " + name, Toast.LENGTH_LONG).show();
+
+                    Intent intent = new Intent(MainActivity.this, RestaurantsActivity.class);
+                    intent.putExtra("name", name);
+                    startActivity(intent);
+
                 }
             });
     }

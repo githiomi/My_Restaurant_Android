@@ -17,6 +17,7 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:background="@color/colorTextIcons"
+        android:fontFamily="@font/architects_daughter"
         android:padding="5sp"
         android:textSize="20sp" />
 
