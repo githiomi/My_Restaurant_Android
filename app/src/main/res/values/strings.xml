@@ -1,3 +1,11 @@
 <resources>
     <string name="app_name">My Restaurant</string>
+
+    <string-array name="mad_libs_1">
+        <item>Noun</item>
+        <item>Animal</item>
+        <item>Verb</item>
+        <item>Human Name</item>
+    </string-array>
+
 </resources>

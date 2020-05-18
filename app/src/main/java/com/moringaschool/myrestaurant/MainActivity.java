@@ -1,11 +1,13 @@
 package com.moringaschool.myrestaurant;
 
 import android.content.Intent;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -19,12 +21,20 @@ public class MainActivity extends AppCompatActivity {
 
     @BindView(R.id.nameEditText) EditText mUsername;
     @BindView(R.id.findRestaurantsButton) Button mFindRestaurantsButton;
+    @BindView(R.id.tvStringArray) TextView mStringArray;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+
+        Resources res = getResources();
+        String[] myWords = res.getStringArray(R.array.mad_libs_1);
+
+        for (String myWord : myWords) {
+            mStringArray.append("The words is: " + myWord + "\n");
+        }
 
         mFindRestaurantsButton.setOnClickListener(new View.OnClickListener() {
                 @Override
