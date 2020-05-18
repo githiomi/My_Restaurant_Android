@@ -13,6 +13,8 @@ import androidx.appcompat.app.AppCompatActivity;
 public class MainActivity extends AppCompatActivity {
 
     public static final String TAG = MainActivity.class.getSimpleName();
+
+
     private Button mFindRestaurantsButton;
     private EditText mUsername;
 
