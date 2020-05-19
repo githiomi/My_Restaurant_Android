@@ -22,7 +22,7 @@ public class MyRestaurantsArrayAdapter extends ArrayAdapter {
     public Object getItem(int position){
         String restaurant = mRestaurants[position];
         String cuisine = mCuisines[position];
-        return String.format("\n %s \n It  has great %s! ", restaurant, cuisine);
+        return String.format("\n\n  %s \n It  has great %s! ", restaurant, cuisine);
     }
 
     @Override
