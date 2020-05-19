@@ -52,7 +52,7 @@ public class RestaurantsActivity extends AppCompatActivity {
 
         final Intent intent = getIntent();
         final String name = intent.getStringExtra("name");
-        mNameView.setText(name + ", these are closest you!");
+        mNameView.setText(name + ", these are all the restaurants closest you!");
 
 
 
