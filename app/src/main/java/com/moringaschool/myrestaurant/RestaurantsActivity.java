@@ -30,20 +30,22 @@ public class RestaurantsActivity extends AppCompatActivity {
             "Lardo", "Portland City Grill", "Fat Head's Brewery",
             "Chipotle", "Subway"};
 
+    private String[] cuisines = new String[] {"Vegan Food", "Breakfast", "Fishs Dishs", "Scandinavian", "Coffee", "English Food", "Burgers", "Fast Food", "Noodle Soups", "Mexican", "BBQ", "Cuban", "Bar Food", "Sports Bar", "Breakfast", "Mexican" };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_restaurants);
         ButterKnife.bind(this);
 
-        ArrayAdapter adapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, restaurants);
+        MyRestaurantsArrayAdapter adapter = new MyRestaurantsArrayAdapter(this, android.R.layout.simple_list_item_1, restaurants, cuisines);
         mRestaurants.setAdapter(adapter);
 
             mRestaurants.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                     String restaurant = ((TextView)view).getText().toString();
-                    Log.v(TAG, "In the On Item CLick Listener");
+
                     Toast.makeText(RestaurantsActivity.this, restaurant, Toast.LENGTH_LONG).show();
                 }
             });
@@ -52,7 +54,6 @@ public class RestaurantsActivity extends AppCompatActivity {
         final String name = intent.getStringExtra("name");
         mNameView.setText(name + ", these are closest you!");
 
-        Log.d(TAG, "In the on create method");
 
 
     }
