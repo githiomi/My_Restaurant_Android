@@ -15,7 +15,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener{
 
     public static final String TAG = MainActivity.class.getSimpleName();
 
@@ -36,20 +36,19 @@ public class MainActivity extends AppCompatActivity {
             mStringArray.append("The words is: " + myWord + "\n");
         }
 
-        mFindRestaurantsButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
+        mFindRestaurantsButton.setOnClickListener(this);
+    }
 
-                    String name = mUsername.getText().toString();
-                    Log.d(TAG, name);
+    @Override
+    public void onClick(View v){
+        if (v == mFindRestaurantsButton){
+            String name = mUsername.getText().toString();
 
-                    Toast.makeText(MainActivity.this, "Welcome, " + name, Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Welcome, " + name, Toast.LENGTH_LONG).show();
 
-                    Intent intent = new Intent(MainActivity.this, RestaurantsActivity.class);
-                    intent.putExtra("name", name);
-                    startActivity(intent);
-
-                }
-            });
+            Intent intent = new Intent(MainActivity.this, RestaurantsActivity.class);
+            intent.putExtra("name", name);
+            startActivity(intent);
+        }
     }
 }
