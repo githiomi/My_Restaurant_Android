@@ -21,7 +21,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @BindView(R.id.nameEditText) EditText mUsername;
     @BindView(R.id.findRestaurantsButton) Button mFindRestaurantsButton;
-    @BindView(R.id.tvStringArray) TextView mStringArray;
+//    @BindView(R.id.tvStringArray) TextView mStringArray;
+    @BindView(R.id.tvLocation) EditText mLocation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,9 +33,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Resources res = getResources();
         String[] myWords = res.getStringArray(R.array.mad_libs_1);
 
-        for (String myWord : myWords) {
-            mStringArray.append("The words is: " + myWord + "\n");
-        }
+//        for (String myWord : myWords) {
+//            mStringArray.append("The words is: " + myWord + "\n");
+//        }
 
         mFindRestaurantsButton.setOnClickListener(this);
     }
@@ -43,10 +44,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View v){
         if (v == mFindRestaurantsButton){
             String name = mUsername.getText().toString();
+            String location = mLocation.getText().toString();
+
 
             Toast.makeText(this, "Welcome, " + name, Toast.LENGTH_LONG).show();
 
             Intent intent = new Intent(MainActivity.this, RestaurantsActivity.class);
+            intent.putExtra("location", location);
             intent.putExtra("name", name);
             startActivity(intent);
         }

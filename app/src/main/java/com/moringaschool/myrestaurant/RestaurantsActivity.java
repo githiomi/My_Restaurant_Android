@@ -13,9 +13,13 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.IOException;
 import java.util.List;
 
 import butterknife.*;
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.Response;
 
 public class RestaurantsActivity extends AppCompatActivity {
 
@@ -38,6 +42,13 @@ public class RestaurantsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_restaurants);
         ButterKnife.bind(this);
 
+        final Intent intent = getIntent();
+        final String location = intent.getStringExtra("location");
+        final String name = intent.getStringExtra("name");
+        mNameView.setText(name + ", these are all the restaurants closest you!");
+
+        getRestaurantsInZipCode(location);
+
         MyRestaurantsArrayAdapter adapter = new MyRestaurantsArrayAdapter(this, android.R.layout.simple_list_item_1, restaurants, cuisines);
         mRestaurants.setAdapter(adapter);
 
@@ -49,12 +60,28 @@ public class RestaurantsActivity extends AppCompatActivity {
                     Toast.makeText(RestaurantsActivity.this, restaurant, Toast.LENGTH_LONG).show();
                 }
             });
+    }
 
-        final Intent intent = getIntent();
-        final String name = intent.getStringExtra("name");
-        mNameView.setText(name + ", these are all the restaurants closest you!");
+    public void getRestaurantsInZipCode(String location){
+        YelpService yelpService = new YelpService();
+        yelpService.findRestaurants(location, new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                e.printStackTrace();
 
+                Toast.makeText(RestaurantsActivity.this, "Error", Toast.LENGTH_SHORT).show();
+            }
 
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                try {
+                    String JSONoutput = response.body().string();
+                    Log.v(TAG, JSONoutput);
+                }catch (IOException e){
+                    e.printStackTrace();
+                }
 
+            }
+        });
     }
 }
