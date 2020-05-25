@@ -42,11 +42,11 @@ public class RestaurantsActivity extends AppCompatActivity {
         final String name = intent.getStringExtra("name");
         mNameView.setText(name + ", these are all the restaurants closest you!");
 
-        getRestaurantsInZipCode(location);
+        getRestaurantsInLocation(location);
 
     }
 
-    public void getRestaurantsInZipCode(String location){
+    public void getRestaurantsInLocation(String location){
         final YelpService yelpService = new YelpService();
         yelpService.findRestaurants(location, new Callback() {
             @Override

@@ -59,7 +59,8 @@
         android:fontFamily="@font/architects_daughter"
         android:hint="Enter Name"
         android:inputType="textPersonName"
-        android:padding="5sp" />
+        android:padding="5sp"
+        android:textColor="@android:color/black" />
 
     <EditText
         android:id="@+id/tvLocation"
@@ -75,7 +76,8 @@
         android:fontFamily="@font/architects_daughter"
         android:hint="Enter Zip Code"
         android:inputType="textPersonName"
-        android:padding="5sp" />
+        android:padding="5sp"
+        android:textColor="@android:color/black" />
 
 <!--    <TextView-->
 <!--        android:id="@+id/tvStringArray"-->
