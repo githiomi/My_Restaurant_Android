@@ -3,6 +3,9 @@ package com.moringaschool.myrestaurant;
 import android.content.Intent;
 import android.widget.TextView;
 
+import com.moringaschool.myrestaurant.ui.MainActivity;
+import com.moringaschool.myrestaurant.ui.RestaurantsActivity;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

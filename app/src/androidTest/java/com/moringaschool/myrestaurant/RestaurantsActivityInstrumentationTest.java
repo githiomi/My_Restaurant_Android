@@ -5,7 +5,7 @@ import android.view.View;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.ActivityTestRule;
 
-import com.moringaschool.myrestaurant.RestaurantsActivity;
+import com.moringaschool.myrestaurant.ui.RestaurantsActivity;
 
 import org.junit.Rule;
 import org.junit.Test;

@@ -1,4 +1,9 @@
-package com.moringaschool.myrestaurant;
+package com.moringaschool.myrestaurant.network;
+
+import android.util.Log;
+
+import com.moringaschool.myrestaurant.Constants;
+import com.moringaschool.myrestaurant.models.Restaurant;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -16,11 +21,14 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 public class YelpService {
+
+    private static final String TAG = "YelpService";
+
     public static void findRestaurants(String location, Callback callback) {
         OkHttpClient client = new OkHttpClient.Builder()
                 .build();
 
-        HttpUrl.Builder urlBuilder = HttpUrl.parse(Constants.YELP_BASE_URL).newBuilder();
+        HttpUrl.Builder urlBuilder = HttpUrl.parse(Constants.YELP_TOKEN).newBuilder();
         urlBuilder.addQueryParameter(Constants.YELP_LOCATION_QUERY_PARAMETER, location);
         String url = urlBuilder.build().toString();
 
@@ -28,6 +36,8 @@ public class YelpService {
                 .url(url)
                 .header("Authorization", Constants.YELP_TOKEN)
                 .build();
+
+        Log.v(TAG, request.toString());
 
         Call call = client.newCall(request);
         call.enqueue(callback);

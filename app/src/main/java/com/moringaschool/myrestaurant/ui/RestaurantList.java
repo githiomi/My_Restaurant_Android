@@ -1,4 +1,4 @@
-package com.moringaschool.myrestaurant;
+package com.moringaschool.myrestaurant.ui;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -10,6 +10,8 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.moringaschool.myrestaurant.R;
 
 public class RestaurantList extends AppCompatActivity {
 
