@@ -11,13 +11,11 @@
         android:id="@+id/background"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
-    <!--        app:srcCompat="@drawable/background"-->
 
     <TextView
         android:id="@+id/nameTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="20dp"
         android:layout_marginEnd="202dp"
@@ -26,31 +24,19 @@
         android:padding="5sp"
         android:textSize="15sp" />
 
-    <ListView
-        android:id="@+id/lvRestaurants"
-        android:layout_width="375dp"
-        android:layout_height="550dp"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="81dp"
-        android:layout_marginBottom="78dp"
-        android:background="@color/colorTextIcons"
-        android:textAlignment="center" />
 
-    <!--        <Button-->
-    <!--            android:id="@+id/btnConfirmName"-->
-    <!--            android:layout_width="wrap_content"-->
-    <!--            android:layout_height="wrap_content"-->
-    <!--            android:layout_alignParentStart="true"-->
-    <!--            android:layout_alignParentTop="true"-->
-    <!--            android:layout_alignParentEnd="true"-->
-    <!--            android:layout_alignParentBottom="true"-->
-    <!--            android:layout_marginStart="163dp"-->
-    <!--            android:layout_marginTop="389dp"-->
-    <!--            android:layout_marginEnd="160dp"-->
-    <!--            android:layout_marginBottom="165dp"-->
-    <!--            android:background="@color/colorAccent"-->
-    <!--            android:text="Confirm" />-->
+        <ListView
+            android:id="@+id/lvRestaurants"
+            android:layout_width="375dp"
+            android:layout_height="550dp"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="81dp"
+            android:layout_marginBottom="78dp"
+            android:background="@color/colorTextIcons"
+            android:textAlignment="center" />
+
+
 
 </RelativeLayout>
