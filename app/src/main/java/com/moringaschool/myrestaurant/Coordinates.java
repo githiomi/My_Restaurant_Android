@@ -3,8 +3,6 @@ package com.moringaschool.myrestaurant;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-import org.apache.commons.lang.builder.EqualsBuilder;
-import org.apache.commons.lang.builder.HashCodeBuilder;
 
 public class Coordinates {
 
@@ -47,23 +45,6 @@ public class Coordinates {
 
     public void setLongitude(Double longitude) {
         this.longitude = longitude;
-    }
-
-    @Override
-    public int hashCode() {
-        return new HashCodeBuilder().append(latitude).append(longitude).toHashCode();
-    }
-
-    @Override
-    public boolean equals(Object other) {
-        if (other == this) {
-            return true;
-        }
-        if ((other instanceof Coordinates) == false) {
-            return false;
-        }
-        Coordinates rhs = ((Coordinates) other);
-        return new EqualsBuilder().append(latitude, rhs.latitude).append(longitude, rhs.longitude).isEquals();
     }
 
 }

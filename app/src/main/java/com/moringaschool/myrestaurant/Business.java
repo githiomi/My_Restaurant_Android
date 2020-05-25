@@ -4,8 +4,6 @@ package com.moringaschool.myrestaurant;
 import java.util.List;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-import org.apache.commons.lang.builder.EqualsBuilder;
-import org.apache.commons.lang.builder.HashCodeBuilder;
 
 public class Business {
 
@@ -217,23 +215,6 @@ public class Business {
 
     public void setTransactions(List<String> transactions) {
         this.transactions = transactions;
-    }
-
-    @Override
-    public int hashCode() {
-        return new HashCodeBuilder().append(distance).append(rating).append(coordinates).append(transactions).append(url).append(isClosed).append(phone).append(reviewCount).append(price).append(imageUrl).append(name).append(alias).append(location).append(id).append(categories).toHashCode();
-    }
-
-    @Override
-    public boolean equals(Object other) {
-        if (other == this) {
-            return true;
-        }
-        if ((other instanceof Business) == false) {
-            return false;
-        }
-        Business rhs = ((Business) other);
-        return new EqualsBuilder().append(distance, rhs.distance).append(rating, rhs.rating).append(coordinates, rhs.coordinates).append(transactions, rhs.transactions).append(url, rhs.url).append(isClosed, rhs.isClosed).append(phone, rhs.phone).append(reviewCount, rhs.reviewCount).append(price, rhs.price).append(imageUrl, rhs.imageUrl).append(name, rhs.name).append(alias, rhs.alias).append(location, rhs.location).append(id, rhs.id).append(categories, rhs.categories).isEquals();
     }
 
 }

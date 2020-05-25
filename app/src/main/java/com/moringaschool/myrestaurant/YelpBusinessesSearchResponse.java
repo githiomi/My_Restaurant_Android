@@ -4,8 +4,6 @@ package com.moringaschool.myrestaurant;
 import java.util.List;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-import org.apache.commons.lang.builder.EqualsBuilder;
-import org.apache.commons.lang.builder.HashCodeBuilder;
 
 public class YelpBusinessesSearchResponse {
 
@@ -63,21 +61,5 @@ public class YelpBusinessesSearchResponse {
         this.region = region;
     }
 
-    @Override
-    public int hashCode() {
-        return new HashCodeBuilder().append(total).append(region).append(businesses).toHashCode();
-    }
-
-    @Override
-    public boolean equals(Object other) {
-        if (other == this) {
-            return true;
-        }
-        if ((other instanceof YelpBusinessesSearchResponse) == false) {
-            return false;
-        }
-        YelpBusinessesSearchResponse rhs = ((YelpBusinessesSearchResponse) other);
-        return new EqualsBuilder().append(total, rhs.total).append(region, rhs.region).append(businesses, rhs.businesses).isEquals();
-    }
 
 }

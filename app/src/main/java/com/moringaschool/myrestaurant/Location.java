@@ -3,8 +3,6 @@ package com.moringaschool.myrestaurant;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-import org.apache.commons.lang.builder.EqualsBuilder;
-import org.apache.commons.lang.builder.HashCodeBuilder;
 
 public class Location {
 
@@ -112,23 +110,6 @@ public class Location {
 
     public void setZipCode(String zipCode) {
         this.zipCode = zipCode;
-    }
-
-    @Override
-    public int hashCode() {
-        return new HashCodeBuilder().append(country).append(zipCode).append(address3).append(city).append(address2).append(address1).append(state).toHashCode();
-    }
-
-    @Override
-    public boolean equals(Object other) {
-        if (other == this) {
-            return true;
-        }
-        if ((other instanceof Location) == false) {
-            return false;
-        }
-        Location rhs = ((Location) other);
-        return new EqualsBuilder().append(country, rhs.country).append(zipCode, rhs.zipCode).append(address3, rhs.address3).append(city, rhs.city).append(address2, rhs.address2).append(address1, rhs.address1).append(state, rhs.state).isEquals();
     }
 
 }
