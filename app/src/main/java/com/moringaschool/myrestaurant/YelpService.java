@@ -3,6 +3,7 @@ package com.moringaschool.myrestaurant;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.json.XML;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -36,8 +37,8 @@ public class YelpService {
     public ArrayList<Restaurant> processResults(Response response) {
         ArrayList<Restaurant> restaurants = new ArrayList<>();
         try {
-            String jsonData = response.body().string();
-            JSONObject yelpJSON = new JSONObject(jsonData);
+            String xmlData = response.body().string();
+            JSONObject yelpJSON = XML.toJSONObject(xmlData);
             JSONArray businessesJSON = yelpJSON.getJSONArray("businesses");
             if (response.isSuccessful()) {
                 for (int i = 0; i < businessesJSON.length(); i++) {
