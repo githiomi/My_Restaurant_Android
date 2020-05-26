@@ -21,11 +21,12 @@
         android:layout_marginEnd="202dp"
         android:background="@color/colorPrimaryDark"
         android:fontFamily="@font/roboto_medium"
+        android:visibility="gone"
         android:padding="5sp"
         android:textSize="15sp" />
 
 
-        <ListView
+    <ListView
             android:id="@+id/lvRestaurants"
             android:layout_width="375dp"
             android:layout_height="550dp"
@@ -33,9 +34,25 @@
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="81dp"
+            android:visibility="gone"
             android:layout_marginBottom="78dp"
             android:background="@color/colorTextIcons"
             android:textAlignment="center" />
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true" />
+
+    <TextView
+        android:id="@+id/errorTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_margin="16dp"
+        android:visibility="gone" />
 
 
 

@@ -21,7 +21,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @BindView(R.id.nameEditText) EditText mUsername;
     @BindView(R.id.findRestaurantsButton) Button mFindRestaurantsButton;
-//    @BindView(R.id.tvStringArray) TextView mStringArray;
     @BindView(R.id.tvLocation) EditText mLocation;
 
     @Override
@@ -32,10 +31,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         Resources res = getResources();
         String[] myWords = res.getStringArray(R.array.mad_libs_1);
-
-//        for (String myWord : myWords) {
-//            mStringArray.append("The words is: " + myWord + "\n");
-//        }
 
         mFindRestaurantsButton.setOnClickListener(this);
     }

@@ -4,23 +4,32 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.moringaschool.myrestaurant.Business;
+import com.moringaschool.myrestaurant.Category;
+import com.moringaschool.myrestaurant.MyRestaurantsArrayAdapter;
 import com.moringaschool.myrestaurant.R;
-import com.moringaschool.myrestaurant.network.YelpService;
+import com.moringaschool.myrestaurant.network.YelpApi;
+import com.moringaschool.myrestaurant.YelpBusinessesSearchResponse;
 import com.moringaschool.myrestaurant.models.Restaurant;
+import com.moringaschool.myrestaurant.network.YelpClient;
 
-import java.io.IOException;
+
 import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.*;
-import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.Response;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 
 public class RestaurantsActivity extends AppCompatActivity {
 
@@ -28,6 +37,9 @@ public class RestaurantsActivity extends AppCompatActivity {
 
     @BindView(R.id.nameTextView) TextView mNameView;
     @BindView(R.id.lvRestaurants) ListView mRestaurants;
+
+    @BindView(R.id.errorTextView) TextView mErrorTextView;
+    @BindView(R.id.progressBar) ProgressBar mProgressBar;
 
     private ArrayList<Restaurant> mRestaurantsList = new ArrayList<>();
 
@@ -40,51 +52,76 @@ public class RestaurantsActivity extends AppCompatActivity {
         final Intent intent = getIntent();
         final String location = intent.getStringExtra("location");
         final String name = intent.getStringExtra("name");
-        mNameView.setText(name + ", these are all the restaurants closest you!");
+        mNameView.setText(name + ", these are all the restaurants closest to " + location + "!");
 
-        getRestaurantsInLocation(location);
-
-    }
-
-    public void getRestaurantsInLocation(String location){
-        final YelpService yelpService = new YelpService();
-        yelpService.findRestaurants(location, new Callback() {
+        mRestaurants.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onFailure(Call call, IOException e) {
-                e.printStackTrace();
-
-                Toast.makeText(RestaurantsActivity.this, "Error", Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onResponse(Call call, Response response) throws IOException {
-                mRestaurantsList = yelpService.processResults(response);
-
-                RestaurantsActivity.this.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        String[] restaurantNames = new String[mRestaurantsList.size()];
-                        for (int i = 0; i < restaurantNames.length; i +=1 ){
-                            restaurantNames[i] = mRestaurantsList.get(i).getName();
-                        }
-
-                        ArrayAdapter adapter = new ArrayAdapter(RestaurantsActivity.this,
-                                android.R.layout.simple_list_item_1, restaurantNames);
-                        mRestaurants.setAdapter(adapter);
-
-                        for (Restaurant restaurant : mRestaurantsList) {
-                            Log.d(TAG, "Name: " + restaurant.getName());
-                            Log.d(TAG, "Phone: " + restaurant.getPhone());
-                            Log.d(TAG, "Website: " + restaurant.getWebsite());
-                            Log.d(TAG, "Image url: " + restaurant.getImageUrl());
-                            Log.d(TAG, "Rating: " + Double.toString(restaurant.getRating()));
-                            Log.d(TAG, "Address: " + android.text.TextUtils.join(", ", restaurant.getAddress()));
-                            Log.d(TAG, "Categories: " + restaurant.getCategories().toString());
-                        }
-
-                    }
-                });
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                String restaurant = ((TextView) view).getText().toString();
+                Toast.makeText(RestaurantsActivity.this, restaurant, Toast.LENGTH_SHORT).show();
             }
         });
+
+//        YelpApi client = YelpClient.getClient();
+//
+//        Call<YelpBusinessesSearchResponse> call = client.getRestaurants(location, "restaurants");
+//
+//        call.enqueue(new Callback<YelpBusinessesSearchResponse>() {
+//
+//            @Override
+//            public void onResponse(Call<YelpBusinessesSearchResponse> call, Response<YelpBusinessesSearchResponse> response){
+//
+//                hideProgressBar();
+//
+//                if (response.isSuccessful()) {
+//                    List<Business> restaurantsList = response.body().getBusinesses();
+//                    String[] restaurants = new String[restaurantsList.size()];
+//                    String[] categories = new String[restaurantsList.size()];
+//
+//                    for (int i = 0; i < restaurants.length; i++) {
+//                        restaurants[i] = restaurantsList.get(i).getName();
+//                    }
+//
+//                    for (int i = 0; i < categories.length; i++) {
+//                        Category category = restaurantsList.get(i).getCategories().get(0);
+//                        categories[i] = category.getTitle();
+//                    }
+//
+//                    ArrayAdapter adapter
+//                            = new MyRestaurantsArrayAdapter(RestaurantsActivity.this, android.R.layout.simple_list_item_1, restaurants, categories);
+//                    mRestaurants.setAdapter(adapter);
+//
+//                    showRestaurants();
+//                } else {
+//                    showUnsuccessfulMessage();
+//                }
+//            }
+//
+//            @Override
+//            public void onFailure(Call<YelpBusinessesSearchResponse> call, Throwable t){
+//                showFailureMessage();
+//                hideProgressBar();
+//            }
+//
+//        });
+    }
+
+    private void showFailureMessage() {
+        mErrorTextView.setText("Something went wrong. Please check your Internet connection and try again later");
+        mErrorTextView.setVisibility(View.VISIBLE);
+    }
+
+    private void showUnsuccessfulMessage() {
+        mErrorTextView.setText("Something went wrong. Please try again later");
+        mErrorTextView.setVisibility(View.VISIBLE);
+    }
+
+    private void showRestaurants() {
+        mRestaurants.setVisibility(View.VISIBLE);
+        mNameView.setVisibility(View.VISIBLE);
+    }
+
+    private void hideProgressBar() {
+        mProgressBar.setVisibility(View.GONE);
     }
 }

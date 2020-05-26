@@ -60,7 +60,8 @@
         android:hint="Enter Name"
         android:inputType="textPersonName"
         android:padding="5sp"
-        android:textColor="@android:color/black" />
+        android:textColor="@android:color/black"
+        android:textColorHint="@android:color/black" />
 
     <EditText
         android:id="@+id/tvLocation"
@@ -77,7 +78,8 @@
         android:hint="Enter Zip Code"
         android:inputType="textPersonName"
         android:padding="5sp"
-        android:textColor="@android:color/black" />
+        android:textColor="@android:color/black"
+        android:textColorHint="@android:color/black" />
 
 <!--    <TextView-->
 <!--        android:id="@+id/tvStringArray"-->
