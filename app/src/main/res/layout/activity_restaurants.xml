@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/background"
-    tools:context="com.moringaschool.myrestaurant.ui.RestaurantsActivity">
+    tools:context="com.moringaschool.myrestaurant.ui.R">
 
     <ImageView
         android:id="@+id/background"

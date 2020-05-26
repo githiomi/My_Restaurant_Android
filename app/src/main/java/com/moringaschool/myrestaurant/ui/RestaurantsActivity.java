@@ -6,29 +6,18 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.moringaschool.myrestaurant.Business;
-import com.moringaschool.myrestaurant.Category;
-import com.moringaschool.myrestaurant.MyRestaurantsArrayAdapter;
 import com.moringaschool.myrestaurant.R;
-import com.moringaschool.myrestaurant.network.YelpApi;
-import com.moringaschool.myrestaurant.YelpBusinessesSearchResponse;
 import com.moringaschool.myrestaurant.models.Restaurant;
-import com.moringaschool.myrestaurant.network.YelpClient;
 
 
 import java.util.ArrayList;
-import java.util.List;
 
 import butterknife.*;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 
 public class RestaurantsActivity extends AppCompatActivity {
