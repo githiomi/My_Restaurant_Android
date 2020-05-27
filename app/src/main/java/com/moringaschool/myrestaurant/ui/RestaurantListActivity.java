@@ -1,28 +1,19 @@
 package com.moringaschool.myrestaurant.ui;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.Adapter;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.moringaschool.myrestaurant.Business;
-import com.moringaschool.myrestaurant.Category;
 import com.moringaschool.myrestaurant.R;
-import com.moringaschool.myrestaurant.YelpBusinessesSearchResponse;
 import com.moringaschool.myrestaurant.adapters.MyRestaurantsArrayAdapter;
-import com.moringaschool.myrestaurant.adapters.RestaurantListAdapter;
 import com.moringaschool.myrestaurant.models.Restaurant;
-import com.moringaschool.myrestaurant.network.YelpApi;
-import com.moringaschool.myrestaurant.network.YelpClient;
 import com.moringaschool.myrestaurant.network.YelpService;
 
 import java.io.IOException;
@@ -34,9 +25,9 @@ import butterknife.*;
 
 import okhttp3.*;
 
-public class RestaurantsActivity extends AppCompatActivity {
+public class RestaurantListActivity extends AppCompatActivity {
 
-    public static final String TAG = RestaurantsActivity.class.getSimpleName();
+    public static final String TAG = RestaurantListActivity.class.getSimpleName();
 
     @BindView(R.id.nameTextView)
     TextView mNameTextView;
@@ -84,10 +75,10 @@ public class RestaurantsActivity extends AppCompatActivity {
 //
 //                    RestaurantListAdapter mAdapter;
 //
-//                    mAdapter = new RestaurantListAdapter(RestaurantsActivity.this, mRestaurants);
+//                    mAdapter = new RestaurantListAdapter(RestaurantListActivity.this, mRestaurants);
 //                    mRestaurantsRecyclerView.setAdapter(mAdapter);
 //                    RecyclerView.LayoutManager layoutManager =
-//                            new LinearLayoutManager(RestaurantsActivity.this);
+//                            new LinearLayoutManager(RestaurantListActivity.this);
 //                    mRestaurantsRecyclerView.setLayoutManager(layoutManager);
 //                    mRestaurantsRecyclerView.setHasFixedSize(true);
 //
@@ -142,7 +133,7 @@ public class RestaurantsActivity extends AppCompatActivity {
 
                     mRestaurants = yelpService.processResults(response);
 
-                    RestaurantsActivity.this.runOnUiThread(new Runnable() {
+                    RestaurantListActivity.this.runOnUiThread(new Runnable() {
 
                         @Override
                         public void run() {
@@ -168,7 +159,7 @@ public class RestaurantsActivity extends AppCompatActivity {
                                 images[a] = image;
                             }
 
-                            ArrayAdapter<String> adapter = new MyRestaurantsArrayAdapter(RestaurantsActivity.this,
+                            ArrayAdapter<String> adapter = new MyRestaurantsArrayAdapter(RestaurantListActivity.this,
                                     android.R.layout.simple_list_item_1, restaurantNames, categories, images );
                             mRestaurantsListView.setAdapter(adapter);
 

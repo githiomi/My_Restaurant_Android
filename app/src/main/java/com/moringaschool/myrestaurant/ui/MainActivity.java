@@ -44,7 +44,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             Toast.makeText(this, "Welcome, " + name, Toast.LENGTH_LONG).show();
 
-            Intent intent = new Intent(MainActivity.this, RestaurantsActivity.class);
+            Intent intent = new Intent(MainActivity.this, RestaurantListActivity.class);
             intent.putExtra("location", location);
             intent.putExtra("name", name);
             startActivity(intent);
