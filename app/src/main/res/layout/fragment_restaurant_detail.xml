@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.moringaschool.myrestaurants.ui.RestaurantDetailFragment">
+    tools:context="com.moringaschool.myrestaurant.ui.RestaurantDetailFragment">
 
     <LinearLayout
         android:orientation="vertical"
@@ -14,7 +14,7 @@
             android:layout_width="match_parent"
             android:layout_height="180dp"
             android:id="@+id/restaurantImageView"
-            android:src="@drawable/waffles"
+            android:src="@drawable/background"
             android:scaleType="centerCrop" />
 
         <RelativeLayout
