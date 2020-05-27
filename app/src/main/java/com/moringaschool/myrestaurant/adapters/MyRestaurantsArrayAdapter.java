@@ -3,6 +3,8 @@ package com.moringaschool.myrestaurant.adapters;
 import android.content.Context;
 import android.widget.ArrayAdapter;
 
+import com.squareup.picasso.Picasso;
+
 public class MyRestaurantsArrayAdapter extends ArrayAdapter {
 
     private Context mContext;
@@ -23,6 +25,7 @@ public class MyRestaurantsArrayAdapter extends ArrayAdapter {
         String restaurant = mRestaurants[position];
         String cuisine = mCuisines[position];
         String imageURL = mImg[position];
+        Picasso.get().load(mImg[position]);
         return String.format("%s \n It  has great %s! \n\n  %s", restaurant, cuisine, imageURL);
     }
 
