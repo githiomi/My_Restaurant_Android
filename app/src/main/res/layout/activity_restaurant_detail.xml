@@ -5,9 +5,16 @@
     android:layout_height="match_parent"
     tools:context="com.moringaschool.myrestaurant.ui.RestaurantDetailActivity">
 
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/background"
+        android:background="@drawable/background" />
+
     <androidx.viewpager.widget.ViewPager
         android:id="@+id/viewPager"
         android:layout_width="match_parent"
+        android:background="@color/colorTextIcons"
         android:layout_height="wrap_content">
 
         <androidx.viewpager.widget.PagerTabStrip
