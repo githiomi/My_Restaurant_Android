@@ -3,26 +3,27 @@ package com.moringaschool.myrestaurant.adapters;
 import android.content.Context;
 import android.widget.ArrayAdapter;
 
-import androidx.annotation.NonNull;
-
 public class MyRestaurantsArrayAdapter extends ArrayAdapter {
 
     private Context mContext;
     private String[] mRestaurants;
     private String[] mCuisines;
+    private String[] mImg;
 
-    public MyRestaurantsArrayAdapter(Context context, int resource, String[] restaurants, String[] cuisines) {
+    public MyRestaurantsArrayAdapter(Context context, int resource, String[] restaurants, String[] cuisines, String[] images) {
         super(context, resource);
         this.mContext = context;
         this.mRestaurants = restaurants;
         this.mCuisines = cuisines;
+        this.mImg = images;
     }
 
     @Override
     public Object getItem(int position){
         String restaurant = mRestaurants[position];
         String cuisine = mCuisines[position];
-        return String.format("%s \n\n It  has great %s! ", restaurant, cuisine);
+        String imageURL = mImg[position];
+        return String.format("%s \n It  has great %s! \n\n  %s", restaurant, cuisine, imageURL);
     }
 
     @Override

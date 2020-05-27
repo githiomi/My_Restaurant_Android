@@ -10,9 +10,11 @@ public class YelpBusinessesSearchResponse {
     @SerializedName("total")
     @Expose
     private Integer total;
+
     @SerializedName("businesses")
     @Expose
-    private List<Business> businesses = null;
+    private List<Business> businesses;
+
     @SerializedName("region")
     @Expose
     private Region region;
@@ -46,6 +48,8 @@ public class YelpBusinessesSearchResponse {
     }
 
     public List<Business> getBusinesses() {
+        YelpBusinessesSearchResponse yelpBusinessesSearchResponse = new YelpBusinessesSearchResponse(getTotal(), getBusinesses(), getRegion());
+        businesses = (List) yelpBusinessesSearchResponse;
         return businesses;
     }
 

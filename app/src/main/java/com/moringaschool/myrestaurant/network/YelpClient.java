@@ -33,7 +33,7 @@ public class YelpClient {
                     .build();
 
             retrofit = new Retrofit.Builder()
-                    .baseUrl(Constants.YELP_BASE_URL)
+                    .baseUrl(Constants.YELP_BASE_URL + "/")
                     .client(okHttpClient)
                     .addConverterFactory(GsonConverterFactory.create())
                     .build();
