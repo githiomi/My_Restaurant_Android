@@ -1,6 +1,6 @@
 package com.moringaschool.myrestaurant.network;
 
-import com.moringaschool.myrestaurant.Constants;
+import com.moringaschool.myrestaurant.models.Constants;
 
 import java.io.IOException;
 

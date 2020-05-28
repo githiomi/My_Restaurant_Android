@@ -1,17 +1,20 @@
 
-package com.moringaschool.myrestaurant;
+package com.moringaschool.myrestaurant.models;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import org.parceler.Parcel;
+
+@Parcel
 public class Category {
 
     @SerializedName("alias")
     @Expose
-    private String alias;
+    public String alias;
     @SerializedName("title")
     @Expose
-    private String title;
+    public String title;
 
     /**
      * No args constructor for use in serialization

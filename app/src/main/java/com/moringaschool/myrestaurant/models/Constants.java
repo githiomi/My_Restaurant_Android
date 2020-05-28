@@ -1,4 +1,6 @@
-package com.moringaschool.myrestaurant;
+package com.moringaschool.myrestaurant.models;
+
+import com.moringaschool.myrestaurant.BuildConfig;
 
 public class Constants {
     public static final String YELP_TOKEN = BuildConfig.YELP_API_KEY;
