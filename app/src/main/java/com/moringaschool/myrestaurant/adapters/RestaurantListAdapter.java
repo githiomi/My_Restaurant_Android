@@ -27,10 +27,10 @@ import butterknife.ButterKnife;
 
 public class RestaurantListAdapter extends RecyclerView.Adapter<RestaurantListAdapter.RestaurantViewHolder> {
 
-    private List<Restaurant> mRestaurants = new ArrayList<>();
+    private List<Business> mRestaurants;
     private Context mContext;
 
-    public RestaurantListAdapter(Context context, List<Restaurant> restaurants){
+    public RestaurantListAdapter(Context context, List<Business> restaurants){
         mContext = context;
         mRestaurants = restaurants;
     }
@@ -67,9 +67,9 @@ public class RestaurantListAdapter extends RecyclerView.Adapter<RestaurantListAd
             itemView.setOnClickListener(this);
         }
 
-        public void bindRestaurant(Restaurant restaurant) {
+        public void bindRestaurant(Business restaurant) {
             mNameTextView.setText(restaurant.getName());
-            mCategoryTextView.setText(restaurant.getCategories().get(0));
+            mCategoryTextView.setText(restaurant.getCategories().get(0).getTitle());
             mRatingTextView.setText("Rating: " + restaurant.getRating() + "/5");
             Picasso.get().load(restaurant.getImageUrl()).into(mRestaurantImageView);
         }
