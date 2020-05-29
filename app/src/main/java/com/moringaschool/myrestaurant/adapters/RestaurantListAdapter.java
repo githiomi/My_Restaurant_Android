@@ -68,10 +68,21 @@ public class RestaurantListAdapter extends RecyclerView.Adapter<RestaurantListAd
         }
 
         public void bindRestaurant(Business restaurant) {
+
+            final int MAX_WIDTH = 200;
+            final int MAX_HEIGHT = 200;
+
             mNameTextView.setText(restaurant.getName());
             mCategoryTextView.setText(restaurant.getCategories().get(0).getTitle());
             mRatingTextView.setText("Rating: " + restaurant.getRating() + "/5");
-            Picasso.get().load(restaurant.getImageUrl()).into(mRestaurantImageView);
+            if (mRestaurantImageView == null) {
+                mRestaurantImageView.setImageResource(R.drawable.background);
+            } else{
+                Picasso.get().load(restaurant.getImageUrl())
+                        .resize(MAX_WIDTH, MAX_HEIGHT)
+                        .centerCrop()
+                        .into(mRestaurantImageView);
+            }
         }
 
         @Override

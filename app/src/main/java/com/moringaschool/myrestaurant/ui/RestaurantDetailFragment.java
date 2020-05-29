@@ -36,6 +36,9 @@ public class RestaurantDetailFragment extends Fragment implements View.OnClickLi
 
     private Business mRestaurant;
 
+    private static final int MAX_WIDTH = 400;
+    private static final int MAX_HEIGHT = 300;
+
     public RestaurantDetailFragment() {
         // Required empty public constructor
     }
@@ -59,7 +62,10 @@ public class RestaurantDetailFragment extends Fragment implements View.OnClickLi
         View view = inflater.inflate(R.layout.fragment_restaurant_detail, container, false);
         ButterKnife.bind(this, view);
 
-        Picasso.get().load(mRestaurant.getImageUrl()).into(mImageLabel);
+        Picasso.get().load(mRestaurant.getImageUrl())
+                .resize(MAX_WIDTH, MAX_HEIGHT)
+                .centerCrop()
+                .into(mImageLabel);
         List<String> categories = new ArrayList<>();
 
         for (Category category: mRestaurant.getCategories()) {

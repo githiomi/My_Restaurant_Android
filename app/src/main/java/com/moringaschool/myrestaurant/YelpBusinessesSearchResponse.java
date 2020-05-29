@@ -50,8 +50,6 @@ public class YelpBusinessesSearchResponse {
     }
 
     public List<Business> getBusinesses() {
-        YelpBusinessesSearchResponse yelpBusinessesSearchResponse = new YelpBusinessesSearchResponse(getTotal(), getBusinesses(), getRegion());
-        businesses = (List) yelpBusinessesSearchResponse;
         return businesses;
     }
 

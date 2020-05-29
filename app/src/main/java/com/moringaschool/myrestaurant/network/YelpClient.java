@@ -16,17 +16,18 @@ public class YelpClient {
 
     private static Retrofit retrofit = null;
 
-    public static YelpApi getClient() {
+    public static synchronized YelpApi getClient() {
 
         if (retrofit == null) {
 
             HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
             interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
-            OkHttpClient client = new OkHttpClient.Builder().addInterceptor(interceptor).build();
+//            OkHttpClient client = new OkHttpClient.Builder().addInterceptor(interceptor).addInterceptor(interceptor1);
 
 
-            OkHttpClient okHttpClient = new OkHttpClient.Builder()
-                    .addInterceptor(new Interceptor() {
+//            OkHttpClient okHttpClient = new OkHttpClient.Builder();
+
+            Interceptor interceptor1 = new Interceptor() {
                         @Override
                         public Response intercept(Chain chain) throws IOException {
                             Request newRequest  = chain.request().newBuilder()
@@ -34,14 +35,14 @@ public class YelpClient {
                                     .build();
                             return chain.proceed(newRequest);
                         }
-                    })
-                    .build();
+                    };
+
+            OkHttpClient.Builder client = new OkHttpClient.Builder().addInterceptor(interceptor).addInterceptor(interceptor1);
 
             retrofit = new Retrofit.Builder()
                     .baseUrl(Constants.YELP_BASE_URL)
-                    .client(okHttpClient)
                     .addConverterFactory(GsonConverterFactory.create())
-                    .client(client)
+                    .client(client.build())
                     .build();
         }
 
