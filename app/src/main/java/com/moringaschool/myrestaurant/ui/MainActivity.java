@@ -1,8 +1,10 @@
 package com.moringaschool.myrestaurant.ui;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -11,11 +13,15 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.moringaschool.myrestaurant.R;
+import com.moringaschool.myrestaurant.models.Constants;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
+
+    private SharedPreferences mSharedPreferences;
+    private SharedPreferences.Editor mEditor;
 
     public static final String TAG = MainActivity.class.getSimpleName();
 
@@ -32,6 +38,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Resources res = getResources();
         String[] myWords = res.getStringArray(R.array.mad_libs_1);
 
+        mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        mEditor = mSharedPreferences.edit();
+
         mFindRestaurantsButton.setOnClickListener(this);
     }
 
@@ -44,10 +53,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             Toast.makeText(this, "Welcome, " + name, Toast.LENGTH_LONG).show();
 
+            if (! (location.equals("")) && !(name.equals("")) ){
+                storeIntoSharedPreference(name, location);
+                mUsername.setText(name);
+                mLocation.setText(location);
+            }
+
             Intent intent = new Intent(MainActivity.this, RestaurantListActivity.class);
             intent.putExtra("location", location);
             intent.putExtra("name", name);
             startActivity(intent);
         }
+    }
+
+    public void storeIntoSharedPreference(String name, String location){
+        mEditor.putString(Constants.NAME_KEY, name).apply();
+        mEditor.putString(Constants.YELP_LOCATION_QUERY_PARAMETER, location).apply();
     }
 }

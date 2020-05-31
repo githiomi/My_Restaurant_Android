@@ -22,10 +22,6 @@ public class YelpClient {
 
             HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
             interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
-//            OkHttpClient client = new OkHttpClient.Builder().addInterceptor(interceptor).addInterceptor(interceptor1);
-
-
-//            OkHttpClient okHttpClient = new OkHttpClient.Builder();
 
             Interceptor interceptor1 = new Interceptor() {
                         @Override
