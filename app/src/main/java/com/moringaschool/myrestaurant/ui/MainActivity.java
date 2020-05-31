@@ -1,10 +1,7 @@
 package com.moringaschool.myrestaurant.ui;
 
 import android.content.Intent;
-import android.content.res.Resources;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
-import android.provider.ContactsContract;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -43,8 +40,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
-        mDatabaseUsernameReference = Constants.ref.child(Constants.FIREBASE_USERNAME_KEY);
-        mDatabaseLocationReference = Constants.ref.child(Constants.FIREBASE_LOCATION_KEY);
+        DatabaseReference ref = Constants.firebaseDatabase.getReference();
+
+        mDatabaseUsernameReference = ref.child(Constants.FIREBASE_USERNAME_KEY);
+        mDatabaseLocationReference = ref.child(Constants.FIREBASE_LOCATION_KEY);
 
         mValueEventListener = mDatabaseLocationReference.addValueEventListener(new ValueEventListener() {
             @Override

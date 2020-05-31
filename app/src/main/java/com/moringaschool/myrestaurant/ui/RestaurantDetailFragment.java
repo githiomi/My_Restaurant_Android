@@ -10,10 +10,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.firebase.database.DatabaseReference;
 import com.moringaschool.myrestaurant.models.Business;
 import com.moringaschool.myrestaurant.models.Category;
 import com.moringaschool.myrestaurant.R;
+import com.moringaschool.myrestaurant.models.Constants;
 import com.squareup.picasso.Picasso;
 
 import org.parceler.Parcels;
@@ -25,6 +28,9 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class RestaurantDetailFragment extends Fragment implements View.OnClickListener{
+
+    private static final String TAG = RestaurantDetailFragment.class.getSimpleName();
+
     @BindView(R.id.restaurantImageView) ImageView mImageLabel;
     @BindView(R.id.restaurantNameTextView) TextView mNameLabel;
     @BindView(R.id.cuisineTextView) TextView mCategoriesLabel;
@@ -82,6 +88,8 @@ public class RestaurantDetailFragment extends Fragment implements View.OnClickLi
         mPhoneLabel.setOnClickListener(this);
         mAddressLabel.setOnClickListener(this);
 
+        mSaveRestaurantButton.setOnClickListener(this);
+
 
         return view;
     }
@@ -104,6 +112,11 @@ public class RestaurantDetailFragment extends Fragment implements View.OnClickLi
                             + "," + mRestaurant.getCoordinates().getLongitude()
                             + "?q=(" + mRestaurant.getName() + ")"));
             startActivity(mapIntent);
+        }
+        if (v == mSaveRestaurantButton){
+            DatabaseReference ref = Constants.firebaseDatabase.getReference(Constants.FIREBASE_CHILD_RESTAURANTS);
+            ref.push().setValue(mRestaurant);
+            Toast.makeText(getContext(), "Saved " + mRestaurant + " to database!", Toast.LENGTH_SHORT).show();
         }
     }
 }
