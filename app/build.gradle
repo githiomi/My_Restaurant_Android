@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+apply plugin: 'com.google.gms.google-services'
 
 android {
     compileSdkVersion 29
@@ -74,4 +75,10 @@ dependencies {
 //    Parcel Library
     implementation 'org.parceler:parceler-api:1.1.12'
     annotationProcessor 'org.parceler:parceler:1.1.12'
+
+//    Firebase database
+    //    for analytics
+    implementation 'com.google.firebase:firebase-analytics:17.2.2'
+    //    for authentication
+    implementation 'com.google.firebase:firebase-auth:19.3.1'
 }
