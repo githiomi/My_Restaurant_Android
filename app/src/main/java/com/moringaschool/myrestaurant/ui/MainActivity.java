@@ -5,14 +5,19 @@ import android.content.res.Resources;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.provider.ContactsContract;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.ValueEventListener;
 import com.moringaschool.myrestaurant.R;
 import com.moringaschool.myrestaurant.models.Constants;
 
@@ -24,6 +29,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public static final String TAG = MainActivity.class.getSimpleName();
     private DatabaseReference mDatabaseLocationReference;
     private DatabaseReference mDatabaseUsernameReference;
+
+//    Value Event Listeners
+    private ValueEventListener mValueEventListener;
 
     @BindView(R.id.nameEditText) EditText mUsername;
     @BindView(R.id.findRestaurantsButton) Button mFindRestaurantsButton;
@@ -38,6 +46,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mDatabaseUsernameReference = Constants.ref.child(Constants.FIREBASE_USERNAME_KEY);
         mDatabaseLocationReference = Constants.ref.child(Constants.FIREBASE_LOCATION_KEY);
 
+        mValueEventListener = mDatabaseLocationReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot localSnapshot : dataSnapshot.getChildren()){
+                    String locationName = localSnapshot.getValue().toString();
+                    Log.d(TAG, "onDataChange: "+ locationName);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Toast.makeText(MainActivity.this, "On value event listener failed", Toast.LENGTH_SHORT).show();
+            }
+        });
+
         mFindRestaurantsButton.setOnClickListener(this);
     }
 
@@ -51,7 +74,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             Toast.makeText(this, "Welcome, " + name, Toast.LENGTH_LONG).show();
 
             if (! (location.equals("")) && !(name.equals("")) ){
-                storeInFirebaseDatabase(name, location);
+                appendDataInFirebaseDatabase(name, location);
                 mUsername.setText(name);
                 mLocation.setText(location);
             }
@@ -63,8 +86,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-    public void storeInFirebaseDatabase(String name, String location){
+    public void storeNewInFirebaseDatabase(String name, String location){
         mDatabaseUsernameReference.setValue(name);
         mDatabaseLocationReference.setValue(location);
+    }
+
+    public void appendDataInFirebaseDatabase(String name, String location){
+        mDatabaseUsernameReference.push().setValue(name);
+        mDatabaseLocationReference.push().setValue(location);
+    }
+
+    @Override
+    protected void onDestroy(){
+        super.onDestroy();
+        mDatabaseLocationReference.removeEventListener(mValueEventListener);
     }
 }
