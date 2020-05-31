@@ -1,10 +1,10 @@
 package com.moringaschool.myrestaurant.ui;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.provider.ContactsContract;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.firebase.database.DatabaseReference;
 import com.moringaschool.myrestaurant.R;
 import com.moringaschool.myrestaurant.models.Constants;
 
@@ -20,10 +21,9 @@ import butterknife.ButterKnife;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
 
-    private SharedPreferences mSharedPreferences;
-    private SharedPreferences.Editor mEditor;
-
     public static final String TAG = MainActivity.class.getSimpleName();
+    private DatabaseReference mDatabaseLocationReference;
+    private DatabaseReference mDatabaseUsernameReference;
 
     @BindView(R.id.nameEditText) EditText mUsername;
     @BindView(R.id.findRestaurantsButton) Button mFindRestaurantsButton;
@@ -35,11 +35,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
-        Resources res = getResources();
-        String[] myWords = res.getStringArray(R.array.mad_libs_1);
-
-        mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        mEditor = mSharedPreferences.edit();
+        mDatabaseUsernameReference = Constants.ref.child(Constants.FIREBASE_USERNAME_KEY);
+        mDatabaseLocationReference = Constants.ref.child(Constants.FIREBASE_LOCATION_KEY);
 
         mFindRestaurantsButton.setOnClickListener(this);
     }
@@ -54,7 +51,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             Toast.makeText(this, "Welcome, " + name, Toast.LENGTH_LONG).show();
 
             if (! (location.equals("")) && !(name.equals("")) ){
-                storeIntoSharedPreference(name, location);
+                storeInFirebaseDatabase(name, location);
                 mUsername.setText(name);
                 mLocation.setText(location);
             }
@@ -66,8 +63,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-    public void storeIntoSharedPreference(String name, String location){
-        mEditor.putString(Constants.NAME_KEY, name).apply();
-        mEditor.putString(Constants.YELP_LOCATION_QUERY_PARAMETER, location).apply();
+    public void storeInFirebaseDatabase(String name, String location){
+        mDatabaseUsernameReference.setValue(name);
+        mDatabaseLocationReference.setValue(location);
     }
 }
