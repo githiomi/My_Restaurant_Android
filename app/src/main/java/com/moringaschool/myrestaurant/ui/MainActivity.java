@@ -1,7 +1,9 @@
 package com.moringaschool.myrestaurant.ui;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -23,6 +25,10 @@ import butterknife.ButterKnife;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
 
+//    Shared preferences
+    private SharedPreferences mSharedPreferences;
+    private SharedPreferences.Editor mEditor;
+
     public static final String TAG = MainActivity.class.getSimpleName();
     private DatabaseReference mDatabaseLocationReference;
     private DatabaseReference mDatabaseUsernameReference;
@@ -41,6 +47,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
+//        Shared Preferences
+        mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        mEditor = mSharedPreferences.edit();
+
+
+//        Firebase
         DatabaseReference ref = Constants.firebaseDatabase.getReference();
 
         mDatabaseUsernameReference = ref.child(Constants.FIREBASE_USERNAME_KEY);
@@ -75,9 +87,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             Toast.makeText(this, "Welcome, " + name, Toast.LENGTH_LONG).show();
 
             if (! (location.equals("")) && !(name.equals("")) ){
-                appendDataInFirebaseDatabase(name, location);
-                mUsername.setText(name);
-                mLocation.setText(location);
+                addToSharedPreferences(name, location);
+                Toast.makeText(this, name + " has added " + location, Toast.LENGTH_SHORT).show();
             }
 
             Intent intent = new Intent(MainActivity.this, RestaurantListActivity.class);
@@ -90,6 +101,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             Intent intent = new Intent(MainActivity.this, SavedRestaurantListActivity.class);
             startActivity(intent);
         }
+    }
+
+    public void addToSharedPreferences(String name, String location){
+        mEditor.putString(Constants.NAME_KEY, name).apply();
+        mEditor.putString(Constants.YELP_LOCATION_QUERY_PARAMETER, location).apply();
     }
 
     public void storeNewInFirebaseDatabase(String name, String location){

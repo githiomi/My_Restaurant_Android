@@ -32,7 +32,12 @@ import retrofit2.*;
 
 public class RestaurantListActivity extends AppCompatActivity {
 
+//    Shared preferences
     private SharedPreferences mSharedPreferences;
+    private SharedPreferences.Editor mEditor;
+
+    String savedName;
+    String savedLocation;
 
     public static final String TAG = RestaurantListActivity.class.getSimpleName();
 
@@ -54,8 +59,8 @@ public class RestaurantListActivity extends AppCompatActivity {
         String location = intent.getStringExtra("location");
 
         mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        String savedName = mSharedPreferences.getString(Constants.NAME_KEY, null);
-        String savedLocation = mSharedPreferences.getString(Constants.YELP_LOCATION_QUERY_PARAMETER, null);
+        savedName = mSharedPreferences.getString(Constants.NAME_KEY, null);
+        savedLocation = mSharedPreferences.getString(Constants.YELP_LOCATION_QUERY_PARAMETER, null);
 
         Log.v(TAG, "Saved information from " + savedName + " as " + savedLocation);
 
