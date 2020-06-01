@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -71,6 +72,7 @@ public class FirebaseRestaurantViewHolder extends RecyclerView.ViewHolder implem
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
+                Toast.makeText(mContext, "Error " + databaseError , Toast.LENGTH_SHORT).show();
             }
         });
     }
