@@ -39,7 +39,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @BindView(R.id.nameEditText) EditText mUsername;
     @BindView(R.id.findRestaurantsButton) Button mFindRestaurantsButton;
     @BindView(R.id.savedRestaurantsButton) Button mSavedRestaurantsButton;
-    @BindView(R.id.tvLocation) EditText mLocation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,20 +57,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mDatabaseUsernameReference = ref.child(Constants.FIREBASE_USERNAME_KEY);
         mDatabaseLocationReference = ref.child(Constants.FIREBASE_LOCATION_KEY);
 
-        mValueEventListener = mDatabaseLocationReference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for (DataSnapshot localSnapshot : dataSnapshot.getChildren()){
-                    String locationName = localSnapshot.getValue().toString();
-                    Log.d(TAG, "onDataChange: "+ locationName);
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                Toast.makeText(MainActivity.this, "On value event listener failed", Toast.LENGTH_SHORT).show();
-            }
-        });
+//        mValueEventListener = mDatabaseLocationReference.addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                for (DataSnapshot localSnapshot : dataSnapshot.getChildren()){
+//                    String locationName = localSnapshot.getValue().toString();
+//                    Log.d(TAG, "onDataChange: "+ locationName);
+//                }
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError databaseError) {
+//                Toast.makeText(MainActivity.this, "On value event listener failed", Toast.LENGTH_SHORT).show();
+//            }
+//        });
 
         mFindRestaurantsButton.setOnClickListener(this);
         mSavedRestaurantsButton.setOnClickListener(this);
@@ -81,18 +80,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View v){
         if (v == mFindRestaurantsButton){
             String name = mUsername.getText().toString();
-            String location = mLocation.getText().toString();
-
 
             Toast.makeText(this, "Welcome, " + name, Toast.LENGTH_LONG).show();
 
-            if (! (location.equals("")) && !(name.equals("")) ){
-                addToSharedPreferences(name, location);
-                Toast.makeText(this, name + " has added " + location, Toast.LENGTH_SHORT).show();
+            if (!(name.equals(""))){
+                addToSharedPreferences(name);
+                Toast.makeText(this, name + " , you have just logged in!", Toast.LENGTH_SHORT).show();
             }
 
             Intent intent = new Intent(MainActivity.this, RestaurantListActivity.class);
-            intent.putExtra("location", location);
             intent.putExtra("name", name);
             startActivity(intent);
         }
@@ -103,19 +99,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-    public void addToSharedPreferences(String name, String location){
+    public void addToSharedPreferences(String name){
         mEditor.putString(Constants.NAME_KEY, name).apply();
-        mEditor.putString(Constants.YELP_LOCATION_QUERY_PARAMETER, location).apply();
     }
 
-    public void storeNewInFirebaseDatabase(String name, String location){
+    public void storeNewInFirebaseDatabase(String name){
         mDatabaseUsernameReference.setValue(name);
-        mDatabaseLocationReference.setValue(location);
     }
 
-    public void appendDataInFirebaseDatabase(String name, String location){
+    public void appendDataInFirebaseDatabase(String name){
         mDatabaseUsernameReference.push().setValue(name);
-        mDatabaseLocationReference.push().setValue(location);
     }
 
     @Override

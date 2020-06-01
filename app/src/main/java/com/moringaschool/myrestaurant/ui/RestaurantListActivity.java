@@ -1,6 +1,7 @@
 package com.moringaschool.myrestaurant.ui;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.view.MenuItemCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -9,9 +10,13 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 
 import android.widget.ProgressBar;
+import android.widget.SearchView;
 import android.widget.TextView;
 
 import com.moringaschool.myrestaurant.R;
@@ -56,7 +61,6 @@ public class RestaurantListActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         String name = intent.getStringExtra("name");
-        String location = intent.getStringExtra("location");
 
         mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         savedName = mSharedPreferences.getString(Constants.NAME_KEY, null);
@@ -64,21 +68,65 @@ public class RestaurantListActivity extends AppCompatActivity {
 
         Log.v(TAG, "Saved information from " + savedName + " as " + savedLocation);
 
-        mNameTextView.setText(name + ", these are the restaurants near and around " + location + "!");
+        mNameTextView.setText(name + ", these are the restaurants near and around " + savedLocation + "!");
 
-        getRestaurants(location);
+        if (savedLocation != null) {
+            getRestaurants(savedLocation);
+        }else {
+            hideProgressBar();
+            mNameTextView.setText("We could not find any location to look up!");
+            showUnsuccessfulMessage();
+        }
 
 
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu){
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_search, menu);
+        ButterKnife.bind(this);
+
+        mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        mEditor = mSharedPreferences.edit();
+
+        MenuItem menuItem = menu.findItem(R.id.action_search);
+        SearchView searchView = (SearchView) MenuItemCompat.getActionView(menuItem);
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                addToSharedPreferences(savedName, query);
+                getRestaurants(query);
+                mNameTextView.setText(savedName + ", these are the restaurants near and around " + query + "!");
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
+            }
+        });
+
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item){
+        return super.onOptionsItemSelected(item);
+    }
+
+
     private void showFailureMessage() {
         mErrorTextView.setText("Something went wrong. Please check your Internet connection and try again later");
         mErrorTextView.setVisibility(View.VISIBLE);
+        mRestaurantsRecyclerView.setVisibility(View.GONE);
     }
 
     private void showUnsuccessfulMessage() {
         mErrorTextView.setText("Something went wrong. Please try again later");
         mErrorTextView.setVisibility(View.VISIBLE);
+        mRestaurantsRecyclerView.setVisibility(View.GONE);
     }
 
     private void showRestaurants() {
@@ -108,6 +156,8 @@ public class RestaurantListActivity extends AppCompatActivity {
                         Log.v(TAG, restaurant.getName());
                     }
 
+                    mErrorTextView.setVisibility(View.GONE);
+
                     RestaurantListAdapter mAdapter;
 
                     mAdapter = new RestaurantListAdapter(RestaurantListActivity.this, mRestaurants);
@@ -133,4 +183,16 @@ public class RestaurantListActivity extends AppCompatActivity {
             }
         });
     }
+
+    public void addToSharedPreferences(String name, String location){
+        mEditor.putString(Constants.NAME_KEY, name).apply();
+        mEditor.putString(Constants.YELP_LOCATION_QUERY_PARAMETER, location).apply();
+    }
+
+    @Override
+    public void onDestroy(){
+        super.onDestroy();
+
+    }
+
 }
