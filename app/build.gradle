@@ -100,5 +100,8 @@ dependencies {
     implementation 'com.google.firebase:firebase-database:19.3.0'
     //    firebase recycler view
     implementation 'com.firebaseui:firebase-ui-database:3.3.1'
+    //    firebase authentication
+    implementation 'com.google.firebase:firebase-auth:16.1.0'
+
 
 }

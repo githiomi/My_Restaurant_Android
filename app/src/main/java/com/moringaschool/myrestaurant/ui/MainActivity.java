@@ -57,20 +57,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mDatabaseUsernameReference = ref.child(Constants.FIREBASE_USERNAME_KEY);
         mDatabaseLocationReference = ref.child(Constants.FIREBASE_LOCATION_KEY);
 
-//        mValueEventListener = mDatabaseLocationReference.addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                for (DataSnapshot localSnapshot : dataSnapshot.getChildren()){
-//                    String locationName = localSnapshot.getValue().toString();
-//                    Log.d(TAG, "onDataChange: "+ locationName);
-//                }
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError databaseError) {
-//                Toast.makeText(MainActivity.this, "On value event listener failed", Toast.LENGTH_SHORT).show();
-//            }
-//        });
+        mValueEventListener = mDatabaseLocationReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot localSnapshot : dataSnapshot.getChildren()){
+                    String locationName = localSnapshot.getValue().toString();
+                    Log.d(TAG, "onDataChange: "+ locationName);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Toast.makeText(MainActivity.this, "On value event listener failed", Toast.LENGTH_SHORT).show();
+            }
+        });
 
         mFindRestaurantsButton.setOnClickListener(this);
         mSavedRestaurantsButton.setOnClickListener(this);
@@ -85,7 +85,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             if (!(name.equals(""))){
                 addToSharedPreferences(name);
-                Toast.makeText(this, name + " , you have just logged in!", Toast.LENGTH_SHORT).show();
             }
 
             Intent intent = new Intent(MainActivity.this, RestaurantListActivity.class);
