@@ -78,25 +78,19 @@ public class CreateAccountActivity extends AppCompatActivity implements View.OnC
 
     public void createUser() {
 
-        if ((mNameEditText.equals("")) || (mEmailEditText.equals("")) || (mPasswordEditText.equals("")) || (mConfirmPasswordEditText.equals(""))) {
-            Toast.makeText(this, "Please fill in all the fields", Toast.LENGTH_SHORT).show();
-        } else {
-
             final String name = mNameEditText.getText().toString().trim();
             final String email = mEmailEditText.getText().toString().trim();
             final String password = mPasswordEditText.getText().toString().trim();
             final String confirmedPassword = mConfirmPasswordEditText.getText().toString().trim();
 
+                boolean isValidName = isValidName(name);
+                boolean isValidEmail = isValidEmail(email);
+                boolean isValidPassword = isValidPassword(password, confirmedPassword);
 
-            if ( ! (password.equals(confirmedPassword)) ) {
-                mCreateUserButton.setActivated(false);
-
-                Toast.makeText(this, "Passwords do not match", Toast.LENGTH_SHORT).show();
-                mPasswordEditText.setText("");
-                mConfirmPasswordEditText.setText("");
-
-            }else {
-                mCreateUserButton.setActivated(true);
+                if ( ! (isValidName) || ! (isValidEmail) || ! (isValidPassword)) return;
+//                {
+//                    disableLogin();
+//                }
 
                 mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
@@ -110,8 +104,6 @@ public class CreateAccountActivity extends AppCompatActivity implements View.OnC
                         }
                     }
                 });
-            }
-        }
     }
 
     public void createAuthenticationListener() {
@@ -140,5 +132,41 @@ public class CreateAccountActivity extends AppCompatActivity implements View.OnC
     public void onStop() {
         super.onStop();
         mAuth.removeAuthStateListener(mFirebaseAuth);
+    }
+
+//    Methods to validate user input for sign up
+
+    private boolean isValidEmail(String email) {
+        boolean isGoodEmail =
+                (email != null && android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches());
+        if (!isGoodEmail) {
+            mEmailEditText.setError("Please enter a valid email address");
+            return false;
+        }
+        return isGoodEmail;
+    }
+
+    private boolean isValidName(String name) {
+        if (name.equals("")) {
+            mNameEditText.setError("Please enter your name");
+            return false;
+        }
+        return true;
+    }
+
+    private boolean isValidPassword(String password, String confirmPassword) {
+        if (password.length() < 6) {
+            mPasswordEditText.setError("Please create a password containing at least 6 characters");
+            return false;
+        } else if (!password.equals(confirmPassword)) {
+            mPasswordEditText.setError("Passwords do not match");
+            return false;
+        }
+        return true;
+    }
+
+//    function to disable login if input is invalid
+    public void disableLogin(){
+        mCreateUserButton.setBackgroundColor(getResources().getColor(R.color.common_google_signin_btn_text_dark_disabled));
     }
 }
