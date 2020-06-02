@@ -61,7 +61,7 @@
         android:padding="5sp"
         android:text="Created by: Daniel Githiomi"
         android:textColor="@color/colorTextIcons"
-        android:textSize="15sp" />
+        android:textSize="9sp" />
 
     <EditText
         android:id="@+id/nameEditText"
@@ -72,9 +72,10 @@
         android:background="@color/colorTextIcons"
         android:ems="10"
         android:fontFamily="@font/architects_daughter"
-        android:hint="Enter Name"
+        android:hint="Enter Username"
         android:inputType="textPersonName"
         android:padding="5sp"
+        android:textAlignment="center"
         android:textColor="@android:color/black"
         android:textColorHint="@android:color/black" />
 

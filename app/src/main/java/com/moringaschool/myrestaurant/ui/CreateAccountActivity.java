@@ -16,6 +16,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.moringaschool.myrestaurant.R;
 
 import butterknife.*;
@@ -25,6 +26,11 @@ public class CreateAccountActivity extends AppCompatActivity implements View.OnC
 //    TAG
     private static final String TAG = CreateAccountActivity.class.getSimpleName();
 
+//    Firebase Authentication
+    private FirebaseAuth mAuth;
+
+//    Firebase Authentication state listener local member variable
+    private FirebaseAuth.AuthStateListener mFirebaseAuth;
 
 //    Butter knife binding
     @BindView(R.id.createUserButton) Button mCreateUserButton;
@@ -34,8 +40,6 @@ public class CreateAccountActivity extends AppCompatActivity implements View.OnC
     @BindView(R.id.confirmPasswordEditText) EditText mConfirmPasswordEditText;
     @BindView(R.id.loginTextView) TextView mLoginTextView;
 
-//    Firebase Authentication
-    private FirebaseAuth mAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,11 +50,14 @@ public class CreateAccountActivity extends AppCompatActivity implements View.OnC
 
         mLoginTextView.setOnClickListener(this);
 
-//        To log in
+//        To log in btn
         mCreateUserButton.setOnClickListener(this);
 
 //        Firebase Authentication instance
         mAuth = FirebaseAuth.getInstance();
+
+//        Firebase Authentication method
+        createAuthenticationListener();
     }
 
     @Override
@@ -64,34 +71,32 @@ public class CreateAccountActivity extends AppCompatActivity implements View.OnC
         }
 
         if ( v == mCreateUserButton) {
-            if ((mNameEditText.equals("")) || (mEmailEditText.equals("")) || (mPasswordEditText.equals("")) || (mConfirmPasswordEditText.equals(""))){
-                Toast.makeText(this, "Please fill in all the fields", Toast.LENGTH_SHORT).show();
-            }
-            else {
                 createUser();
-            }
         }
 
     }
 
-    public void createUser(){
+    public void createUser() {
 
-        final String name = mNameEditText.getText().toString().trim();
-        final String email = mEmailEditText.getText().toString().trim();
-        final String password = mPasswordEditText.getText().toString().trim();
-        final String confirmedPassword = mConfirmPasswordEditText.getText().toString().trim();
+        if ((mNameEditText.equals("")) || (mEmailEditText.equals("")) || (mPasswordEditText.equals("")) || (mConfirmPasswordEditText.equals(""))) {
+            Toast.makeText(this, "Please fill in all the fields", Toast.LENGTH_SHORT).show();
+        } else {
 
-//        if ((mNameEditText.equals("")) || (mEmailEditText.equals("")) || (mPasswordEditText.equals("")) || (mConfirmPasswordEditText.equals(""))) {
-//            Toast.makeText(this, "Please fill in all the fields", Toast.LENGTH_SHORT).show();
-//
-//        }else {
-//
-            if ( ( password.equals("") ) || ( confirmedPassword.equals("") ) || ! (password.equals(confirmedPassword)) ) {
+            final String name = mNameEditText.getText().toString().trim();
+            final String email = mEmailEditText.getText().toString().trim();
+            final String password = mPasswordEditText.getText().toString().trim();
+            final String confirmedPassword = mConfirmPasswordEditText.getText().toString().trim();
+
+
+            if ( ! (password.equals(confirmedPassword)) ) {
                 mCreateUserButton.setActivated(false);
-                mCreateUserButton.setClickable(false);
-            }
 
+                Toast.makeText(this, "Passwords do not match", Toast.LENGTH_SHORT).show();
+                mPasswordEditText.setText("");
+                mConfirmPasswordEditText.setText("");
 
+            }else {
+                mCreateUserButton.setActivated(true);
 
                 mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
@@ -105,11 +110,35 @@ public class CreateAccountActivity extends AppCompatActivity implements View.OnC
                         }
                     }
                 });
-//            } else {
-//                Toast.makeText(this, "Passwords do not match", Toast.LENGTH_SHORT).show();
-//                mPasswordEditText.setText("");
-//                mConfirmPasswordEditText.setText("");
-//            }
+            }
         }
+    }
 
+    public void createAuthenticationListener() {
+        mFirebaseAuth = new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
+
+                if ( firebaseUser != null ){
+                    Intent intent = new Intent(CreateAccountActivity.this, MainActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(intent);
+                    finish();
+                }
+            }
+        };
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        mAuth.addAuthStateListener(mFirebaseAuth);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        mAuth.removeAuthStateListener(mFirebaseAuth);
+    }
 }
