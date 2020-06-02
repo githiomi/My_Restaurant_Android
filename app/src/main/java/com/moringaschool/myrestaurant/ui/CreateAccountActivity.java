@@ -3,6 +3,7 @@ package com.moringaschool.myrestaurant.ui;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -14,6 +15,7 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -31,6 +33,9 @@ public class CreateAccountActivity extends AppCompatActivity implements View.OnC
 
 //    Firebase Authentication state listener local member variable
     private FirebaseAuth.AuthStateListener mFirebaseAuth;
+
+//    Firebase authentication progress dialog
+    private ProgressDialog mProgressDialog;
 
 //    Butter knife binding
     @BindView(R.id.createUserButton) Button mCreateUserButton;
@@ -58,8 +63,13 @@ public class CreateAccountActivity extends AppCompatActivity implements View.OnC
 
 //        Firebase Authentication method
         createAuthenticationListener();
+
+//        Launch the firebase authentication progress dialog
+        createAuthProgressDialog();
+
     }
 
+//    On click listeners
     @Override
     public void onClick(View v) {
 
@@ -76,6 +86,7 @@ public class CreateAccountActivity extends AppCompatActivity implements View.OnC
 
     }
 
+//    To add a new user to my firebase
     public void createUser() {
 
             final String name = mNameEditText.getText().toString().trim();
@@ -88,16 +99,18 @@ public class CreateAccountActivity extends AppCompatActivity implements View.OnC
                 boolean isValidPassword = isValidPassword(password, confirmedPassword);
 
                 if ( ! (isValidName) || ! (isValidEmail) || ! (isValidPassword)) return;
-//                {
-//                    disableLogin();
-//                }
+
+                mProgressDialog.show();
 
                 mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
+
+                        mProgressDialog.dismiss();
+
                         if (task.isSuccessful()) {
                             Log.d(TAG, name + ", Authentication successful");
-                            Toast.makeText(CreateAccountActivity.this, name + ", your data has been saved successfully", Toast.LENGTH_LONG).show();
+                            Toast.makeText(CreateAccountActivity.this, "Authentication successful", Toast.LENGTH_LONG).show();
                         } else {
                             Toast.makeText(CreateAccountActivity.this, name + ", Authentication failed.",
                                     Toast.LENGTH_SHORT).show();
@@ -135,7 +148,6 @@ public class CreateAccountActivity extends AppCompatActivity implements View.OnC
     }
 
 //    Methods to validate user input for sign up
-
     private boolean isValidEmail(String email) {
         boolean isGoodEmail =
                 (email != null && android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches());
@@ -168,5 +180,14 @@ public class CreateAccountActivity extends AppCompatActivity implements View.OnC
 //    function to disable login if input is invalid
     public void disableLogin(){
         mCreateUserButton.setBackgroundColor(getResources().getColor(R.color.common_google_signin_btn_text_dark_disabled));
+    }
+
+//    Method that calls the firebase authentication progress dialog
+    private void createAuthProgressDialog(){
+            mProgressDialog = new ProgressDialog(this);
+            mProgressDialog.setTitle("Loading...");
+            mProgressDialog.setMessage("Authenticating with Firebase... \n Please hold");
+            mProgressDialog.setCancelable(false);
+
     }
 }
