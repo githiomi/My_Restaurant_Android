@@ -12,11 +12,15 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.moringaschool.myrestaurant.models.Business;
 import com.moringaschool.myrestaurant.models.Category;
 import com.moringaschool.myrestaurant.R;
 import com.moringaschool.myrestaurant.models.Constants;
+import com.moringaschool.myrestaurant.models.Restaurant;
 import com.squareup.picasso.Picasso;
 
 import org.parceler.Parcels;
@@ -40,7 +44,8 @@ public class RestaurantDetailFragment extends Fragment implements View.OnClickLi
     @BindView(R.id.addressTextView) TextView mAddressLabel;
     @BindView(R.id.saveRestaurantButton) TextView mSaveRestaurantButton;
 
-    private Business mRestaurant;
+//    private Business mRestaurant;
+    private Restaurant mRestaurant;
 
     private static final int MAX_WIDTH = 400;
     private static final int MAX_HEIGHT = 300;
@@ -74,15 +79,15 @@ public class RestaurantDetailFragment extends Fragment implements View.OnClickLi
                 .into(mImageLabel);
         List<String> categories = new ArrayList<>();
 
-        for (Category category: mRestaurant.getCategories()) {
-            categories.add(category.getTitle());
+        for (String category : mRestaurant.getCategories()) {
+            categories.add(category);
         }
 
         mNameLabel.setText(mRestaurant.getName());
         mCategoriesLabel.setText(android.text.TextUtils.join(", ", categories));
         mRatingLabel.setText(Double.toString(mRestaurant.getRating()) + "/5");
         mPhoneLabel.setText(mRestaurant.getPhone());
-        mAddressLabel.setText(mRestaurant.getLocation().toString());
+        mAddressLabel.setText(mRestaurant.getAddress().toString());
 
         mWebsiteLabel.setOnClickListener(this);
         mPhoneLabel.setOnClickListener(this);
@@ -98,7 +103,7 @@ public class RestaurantDetailFragment extends Fragment implements View.OnClickLi
     public void onClick(View v){
         if (v == mWebsiteLabel) {
             Intent webIntent = new Intent(Intent.ACTION_VIEW,
-                    Uri.parse(mRestaurant.getUrl()));
+                    Uri.parse(mRestaurant.getWebsite()));
             startActivity(webIntent);
         }
         if (v == mPhoneLabel) {
@@ -108,14 +113,25 @@ public class RestaurantDetailFragment extends Fragment implements View.OnClickLi
         }
         if (v == mAddressLabel) {
             Intent mapIntent = new Intent(Intent.ACTION_VIEW,
-                    Uri.parse("geo:" + mRestaurant.getCoordinates().getLatitude()
-                            + "," + mRestaurant.getCoordinates().getLongitude()
+                    Uri.parse("geo:" + mRestaurant.getLatitude()
+                            + "," + mRestaurant.getLongitude()
                             + "?q=(" + mRestaurant.getName() + ")"));
             startActivity(mapIntent);
         }
         if (v == mSaveRestaurantButton){
-            DatabaseReference ref = Constants.firebaseDatabase.getReference(Constants.FIREBASE_CHILD_RESTAURANTS);
-            ref.push().setValue(mRestaurant);
+            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+            String uId = user.getUid();
+
+            DatabaseReference ref = FirebaseDatabase.getInstance()
+                    .getReference(Constants.FIREBASE_CHILD_RESTAURANTS)
+                    .child(uId);
+
+            DatabaseReference databaseReference = ref.push();
+            String pushId = databaseReference.getKey();
+            mRestaurant.setPushId(pushId);
+            databaseReference.push().setValue(mRestaurant);
+
+            //  Visual confirmation of addition to database
             Toast.makeText(getContext(), "Saved " + mRestaurant.getName() + " to database!", Toast.LENGTH_SHORT).show();
         }
     }
