@@ -136,12 +136,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
         if ( id == R.id.profileOption){
             Toast.makeText(this, "You cannot see your profile at this time", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+            startActivity(intent);
         }
         return super.onOptionsItemSelected(menuItem);
     }
 
     public void logout(){
         FirebaseAuth.getInstance().signOut();
+        Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+        finish();
     }
 
 
