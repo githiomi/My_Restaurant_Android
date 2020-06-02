@@ -79,8 +79,6 @@ public class RestaurantListActivity extends AppCompatActivity {
             mNameTextView.setText("We could not find any location to look up!");
             showUnsuccessfulMessage();
         }
-
-
     }
 
     @Override

@@ -44,8 +44,7 @@ public class RestaurantDetailFragment extends Fragment implements View.OnClickLi
     @BindView(R.id.addressTextView) TextView mAddressLabel;
     @BindView(R.id.saveRestaurantButton) TextView mSaveRestaurantButton;
 
-//    private Business mRestaurant;
-    private Restaurant mRestaurant;
+    private Business mRestaurant;
 
     private static final int MAX_WIDTH = 400;
     private static final int MAX_HEIGHT = 300;
@@ -79,15 +78,15 @@ public class RestaurantDetailFragment extends Fragment implements View.OnClickLi
                 .into(mImageLabel);
         List<String> categories = new ArrayList<>();
 
-        for (String category : mRestaurant.getCategories()) {
-            categories.add(category);
+        for (Category category: mRestaurant.getCategories()) {
+            categories.add(category.getTitle());
         }
 
         mNameLabel.setText(mRestaurant.getName());
         mCategoriesLabel.setText(android.text.TextUtils.join(", ", categories));
         mRatingLabel.setText(Double.toString(mRestaurant.getRating()) + "/5");
         mPhoneLabel.setText(mRestaurant.getPhone());
-        mAddressLabel.setText(mRestaurant.getAddress().toString());
+        mAddressLabel.setText(mRestaurant.getLocation().toString());
 
         mWebsiteLabel.setOnClickListener(this);
         mPhoneLabel.setOnClickListener(this);
@@ -103,7 +102,7 @@ public class RestaurantDetailFragment extends Fragment implements View.OnClickLi
     public void onClick(View v){
         if (v == mWebsiteLabel) {
             Intent webIntent = new Intent(Intent.ACTION_VIEW,
-                    Uri.parse(mRestaurant.getWebsite()));
+                    Uri.parse(mRestaurant.getUrl()));
             startActivity(webIntent);
         }
         if (v == mPhoneLabel) {
@@ -113,8 +112,8 @@ public class RestaurantDetailFragment extends Fragment implements View.OnClickLi
         }
         if (v == mAddressLabel) {
             Intent mapIntent = new Intent(Intent.ACTION_VIEW,
-                    Uri.parse("geo:" + mRestaurant.getLatitude()
-                            + "," + mRestaurant.getLongitude()
+                    Uri.parse("geo:" + mRestaurant.getCoordinates().getLatitude()
+                            + "," + mRestaurant.getCoordinates().getLongitude()
                             + "?q=(" + mRestaurant.getName() + ")"));
             startActivity(mapIntent);
         }
@@ -128,8 +127,9 @@ public class RestaurantDetailFragment extends Fragment implements View.OnClickLi
 
             DatabaseReference databaseReference = ref.push();
             String pushId = databaseReference.getKey();
-            mRestaurant.setPushId(pushId);
-            databaseReference.push().setValue(mRestaurant);
+            Restaurant mRest = new Restaurant();
+            mRest.setPushId(pushId);
+            ref.push().setValue(mRestaurant);
 
             //  Visual confirmation of addition to database
             Toast.makeText(getContext(), "Saved " + mRestaurant.getName() + " to database!", Toast.LENGTH_SHORT).show();

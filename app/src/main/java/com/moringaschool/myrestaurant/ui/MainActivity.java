@@ -64,6 +64,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
                 if ( firebaseUser != null ){
                     getSupportActionBar().setTitle("Welcome " + firebaseUser.getDisplayName() + "!");
+                    mUsername.setText(firebaseUser.getDisplayName());
+                    mUsername.setCursorVisible(false);
                 }else{
                     getSupportActionBar().setTitle("Welcome User");
                 }
@@ -155,8 +157,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
         if ( id == R.id.profileOption){
             Toast.makeText(this, "You cannot see your profile at this time", Toast.LENGTH_SHORT).show();
-            Intent intent = new Intent(MainActivity.this, LoginActivity.class);
-            startActivity(intent);
         }
         return super.onOptionsItemSelected(menuItem);
     }
