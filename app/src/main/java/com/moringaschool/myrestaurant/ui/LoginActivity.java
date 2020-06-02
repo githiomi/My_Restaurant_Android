@@ -3,6 +3,7 @@ package com.moringaschool.myrestaurant.ui;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -38,6 +39,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     @BindView(R.id.emailEditText) EditText mEmailEditText;
     @BindView(R.id.passwordEditText) EditText mPasswordEditText;
 
+//    Progress Dialog initialization
+    private ProgressDialog mProgressDialog;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,6 +50,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         ButterKnife.bind(this);
 
         mOptionToRegisterTextView.setOnClickListener(this);
+
+//        Custom method to create the progress dialog
+        createProgressDialog();
 
 //        Firebase Authentication
         mAuth = FirebaseAuth.getInstance();
@@ -95,21 +102,33 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             return;
         }
 
+        mProgressDialog.show();
+
         mAuth.signInWithEmailAndPassword(user_email, user_password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
+
+                mProgressDialog.dismiss();
+
                 if ( task.isSuccessful() ){
                     String authentication = "Successful!";
                     Log.d(TAG, "onComplete: " +  authentication);
                     Toast.makeText(LoginActivity.this, authentication, Toast.LENGTH_SHORT).show();
                 }
                 else{
-                    String authentication = "Authentication failed";
+                    String authentication = "Incorrect username or password";
                     Toast.makeText(LoginActivity.this, authentication, Toast.LENGTH_SHORT).show();
                 }
             }
         });
+    }
 
+//    Method to create the custom progress dialog
+    public void createProgressDialog(){
+        mProgressDialog = new ProgressDialog(this);
+        mProgressDialog.setTitle("Loading...");
+        mProgressDialog.setMessage("Authenticating with Firebase...");
+        mProgressDialog.setCancelable(false);
     }
 
     @Override
