@@ -17,9 +17,11 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.moringaschool.myrestaurant.R;
 import com.moringaschool.myrestaurant.models.Constants;
@@ -28,6 +30,10 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
+
+//    firebase username
+    private FirebaseAuth mFirebaseAuth;
+    private FirebaseAuth.AuthStateListener mfirebaseAuthStateListener;
 
 //    Shared preferences
     private SharedPreferences mSharedPreferences;
@@ -50,10 +56,23 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
+//        Firebase Authentication
+        mFirebaseAuth = FirebaseAuth.getInstance();
+        mfirebaseAuthStateListener = new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
+                if ( firebaseUser != null ){
+                    getSupportActionBar().setTitle("Welcome " + firebaseUser.getDisplayName() + "!");
+                }else{
+                    getSupportActionBar().setTitle("Welcome User");
+                }
+            }
+        };
+
 //        Shared Preferences
         mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         mEditor = mSharedPreferences.edit();
-
 
 //        Firebase
         DatabaseReference ref = Constants.firebaseDatabase.getReference();
@@ -148,6 +167,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
         finish();
+    }
+
+    @Override
+    public void onStart(){
+        super.onStart();
+        mFirebaseAuth.addAuthStateListener(mfirebaseAuthStateListener);
+    }
+
+    @Override
+    public void onStop(){
+        super.onStop();
+        mFirebaseAuth.removeAuthStateListener(mfirebaseAuthStateListener);
     }
 
 }
