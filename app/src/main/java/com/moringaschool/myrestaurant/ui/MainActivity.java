@@ -5,6 +5,9 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -13,6 +16,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -115,4 +119,30 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onDestroy();
         mDatabaseLocationReference.removeEventListener(mValueEventListener);
     }
+
+    @Override
+    public boolean onCreateOptionsMenu (Menu menu){
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_main, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem menuItem){
+        int id = menuItem.getItemId();
+        if ( id == R.id.action_logout ){
+            logout();
+            return true;
+        }
+        if ( id == R.id.profileOption){
+            Toast.makeText(this, "You cannot see your profile at this time", Toast.LENGTH_SHORT).show();
+        }
+        return super.onOptionsItemSelected(menuItem);
+    }
+
+    public void logout(){
+        FirebaseAuth.getInstance().signOut();
+    }
+
+
 }
