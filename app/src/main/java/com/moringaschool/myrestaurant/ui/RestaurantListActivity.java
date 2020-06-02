@@ -62,6 +62,8 @@ public class RestaurantListActivity extends AppCompatActivity {
         Intent intent = getIntent();
         String name = intent.getStringExtra("name");
 
+        getSupportActionBar().setTitle("Welcome " + name );
+
         mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         savedName = mSharedPreferences.getString(Constants.NAME_KEY, null);
         savedLocation = mSharedPreferences.getString(Constants.YELP_LOCATION_QUERY_PARAMETER, null);
