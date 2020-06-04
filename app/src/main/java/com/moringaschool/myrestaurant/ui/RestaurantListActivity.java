@@ -41,9 +41,11 @@ public class RestaurantListActivity extends AppCompatActivity {
     private SharedPreferences mSharedPreferences;
     private SharedPreferences.Editor mEditor;
 
+//    Local variables
     String savedName;
     String savedLocation;
 
+//    TAG
     public static final String TAG = RestaurantListActivity.class.getSimpleName();
 
     @BindView(R.id.nameTextView) TextView mNameTextView;
@@ -51,6 +53,7 @@ public class RestaurantListActivity extends AppCompatActivity {
     @BindView(R.id.progressBar) ProgressBar mProgressBar;
     @BindView(R.id.errorTextView) TextView mErrorTextView;
 
+//    Class data type model
     public List<Business> mRestaurants = new ArrayList<>();
 
     @Override
@@ -184,6 +187,7 @@ public class RestaurantListActivity extends AppCompatActivity {
         });
     }
 
+//    Shared preferences variables
     public void addToSharedPreferences(String name, String location){
         mEditor.putString(Constants.NAME_KEY, name).apply();
         mEditor.putString(Constants.YELP_LOCATION_QUERY_PARAMETER, location).apply();
@@ -192,7 +196,6 @@ public class RestaurantListActivity extends AppCompatActivity {
     @Override
     public void onDestroy(){
         super.onDestroy();
-
     }
 
 }
