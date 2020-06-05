@@ -28,6 +28,7 @@ import com.moringaschool.myrestaurant.models.Business;
 import com.moringaschool.myrestaurant.models.Constants;
 import com.moringaschool.myrestaurant.network.YelpApi;
 import com.moringaschool.myrestaurant.network.YelpClient;
+import com.moringaschool.myrestaurant.network.YelpService;
 
 import java.util.ArrayList;
 import java.util.List;
