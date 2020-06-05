@@ -27,7 +27,7 @@ public class YelpClient {
                         @Override
                         public Response intercept(Chain chain) throws IOException {
                             Request newRequest  = chain.request().newBuilder()
-                                    .addHeader("Authorization", Constants.YELP_TOKEN)
+                                    .addHeader("Authorization", "Bearer " + Constants.YELP_TOKEN)
                                     .build();
                             return chain.proceed(newRequest);
                         }
