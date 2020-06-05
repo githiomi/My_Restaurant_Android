@@ -19,6 +19,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.moringaschool.myrestaurant.R;
 import com.moringaschool.myrestaurant.adapters.FirebaseRestaurantViewHolder;
+import com.moringaschool.myrestaurant.models.Business;
 import com.moringaschool.myrestaurant.models.Constants;
 import com.moringaschool.myrestaurant.models.Restaurant;
 
@@ -27,7 +28,7 @@ import butterknife.ButterKnife;
 
 public class SavedRestaurantListActivity extends AppCompatActivity {
     private DatabaseReference mRestaurantReference;
-    private FirebaseRecyclerAdapter<Restaurant, FirebaseRestaurantViewHolder> mFirebaseAdapter;
+    private FirebaseRecyclerAdapter<Business, FirebaseRestaurantViewHolder> mFirebaseAdapter;
 
     @BindView(R.id.nameTextView) TextView mTextVIew;
     @BindView(R.id.rvRestaurants) RecyclerView mRecyclerView;
@@ -42,23 +43,24 @@ public class SavedRestaurantListActivity extends AppCompatActivity {
 
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         String userId = user.getUid();
+        String username = user.getDisplayName();
 
         mRestaurantReference = FirebaseDatabase.getInstance()
                 .getReference(Constants.FIREBASE_CHILD_RESTAURANTS)
-                .child(userId);
+                .child(username);
 
         setUpFirebaseAdapter();
     }
 
     private void setUpFirebaseAdapter(){
-        FirebaseRecyclerOptions<Restaurant> options =
-                new FirebaseRecyclerOptions.Builder<Restaurant>()
-                        .setQuery(mRestaurantReference, Restaurant.class)
+        FirebaseRecyclerOptions<Business> options =
+                new FirebaseRecyclerOptions.Builder<Business>()
+                        .setQuery(mRestaurantReference, Business.class)
                         .build();
 
-        mFirebaseAdapter = new FirebaseRecyclerAdapter<Restaurant, FirebaseRestaurantViewHolder>(options) {
+        mFirebaseAdapter = new FirebaseRecyclerAdapter<Business, FirebaseRestaurantViewHolder>(options) {
             @Override
-            protected void onBindViewHolder(@NonNull FirebaseRestaurantViewHolder firebaseRestaurantViewHolder, int position, Restaurant restaurant) {
+            protected void onBindViewHolder(@NonNull FirebaseRestaurantViewHolder firebaseRestaurantViewHolder, int position, Business restaurant) {
                 firebaseRestaurantViewHolder.bindRestaurant(restaurant);
             }
 

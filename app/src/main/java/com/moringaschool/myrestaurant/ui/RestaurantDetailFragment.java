@@ -124,13 +124,14 @@ public class RestaurantDetailFragment extends Fragment implements View.OnClickLi
 
             DatabaseReference ref = FirebaseDatabase.getInstance()
                     .getReference(Constants.FIREBASE_CHILD_RESTAURANTS)
-                    .child(username);
+                    .child(username)
+                    .child(mRestaurant.name);
 
             DatabaseReference databaseReference = ref.push();
             String pushId = databaseReference.getKey();
             Restaurant mRest = new Restaurant();
             mRest.setPushId(pushId);
-            ref.push().setValue(mRestaurant);
+            ref.setValue(mRestaurant);
 
             //  Visual confirmation of addition to database
             Toast.makeText(getContext(), "Saved " + mRestaurant.getName() + " to database!", Toast.LENGTH_SHORT).show();

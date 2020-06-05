@@ -18,6 +18,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.moringaschool.myrestaurant.R;
+import com.moringaschool.myrestaurant.models.Business;
 import com.moringaschool.myrestaurant.models.Constants;
 import com.moringaschool.myrestaurant.models.Restaurant;
 import com.moringaschool.myrestaurant.ui.RestaurantDetailActivity;
@@ -42,7 +43,7 @@ public class FirebaseRestaurantViewHolder extends RecyclerView.ViewHolder implem
         itemView.setOnClickListener(this);
     }
 
-    public void bindRestaurant(Restaurant restaurant) {
+    public void bindRestaurant(Business restaurant) {
         ImageView restaurantImageView = (ImageView) mView.findViewById(R.id.restaurantImageView);
         TextView nameTextView = (TextView) mView.findViewById(R.id.restaurantNameTextView);
         TextView categoryTextView = (TextView) mView.findViewById(R.id.categoryTextView);
@@ -51,27 +52,28 @@ public class FirebaseRestaurantViewHolder extends RecyclerView.ViewHolder implem
         Picasso.get().load(restaurant.getImageUrl()).into(restaurantImageView);
 
         nameTextView.setText(restaurant.getName());
-        categoryTextView.setText(restaurant.getCategories().get(0));
+        categoryTextView.setText(restaurant.getCategories().get(0).toString());
         ratingTextView.setText("Rating: " + restaurant.getRating() + "/5");
     }
 
     @Override
     public void onClick(View view) {
-        final ArrayList<Restaurant> restaurants = new ArrayList<>();
+        final ArrayList<Business> restaurants = new ArrayList<>();
 
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         String userId = user.getUid();
+        String username = user.getDisplayName();
 
         mDatabaseReference = FirebaseDatabase.getInstance()
                 .getReference(Constants.FIREBASE_CHILD_RESTAURANTS)
-                .child(userId);
+                .child(username);
 
         mDatabaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
 
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    restaurants.add(snapshot.getValue(Restaurant.class));
+                    restaurants.add(snapshot.getValue(Business.class));
                 }
 
                 int itemPosition = getLayoutPosition();
