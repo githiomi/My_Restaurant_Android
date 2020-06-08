@@ -2,6 +2,7 @@ package com.moringaschool.myrestaurant.adapters;
 
 import android.content.Context;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -16,12 +17,13 @@ import com.moringaschool.myrestaurant.models.Restaurant;
 import com.moringaschool.myrestaurant.util.ItemTouchHelperAdapter;
 import com.moringaschool.myrestaurant.util.OnStartDragListener;
 
-public class FirebaseRestaurantListAdapter extends FirebaseRecyclerAdapter<Restaurant, FirebaseRestaurantViewHolder> implements ItemTouchHelperAdapter {
+public class FirebaseRestaurantListAdapter extends FirebaseRecyclerAdapter<Business, FirebaseRestaurantViewHolder> implements ItemTouchHelperAdapter {
+//    Local variables
     private DatabaseReference mRef;
     private OnStartDragListener mOnStartDragListener;
     private Context mContext;
 
-    public FirebaseRestaurantListAdapter(FirebaseRecyclerOptions<Restaurant> options,
+    public FirebaseRestaurantListAdapter(FirebaseRecyclerOptions<Business> options,
                                          DatabaseReference ref,
                                          OnStartDragListener onStartDragListener,
                                          Context context){
@@ -32,7 +34,17 @@ public class FirebaseRestaurantListAdapter extends FirebaseRecyclerAdapter<Resta
     }
 
     @Override
-    protected void onBindViewHolder(@NonNull FirebaseRestaurantViewHolder firebaseRestaurantViewHolder, int position, @NonNull Restaurant restaurant) {
+    protected void onBindViewHolder(@NonNull FirebaseRestaurantViewHolder firebaseRestaurantViewHolder, int position, @NonNull Business restaurant) {
+        firebaseRestaurantViewHolder.bindRestaurant(restaurant);
+        firebaseRestaurantViewHolder.mRestaurantImageView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if ( event.getActionMasked() == MotionEvent.ACTION_DOWN ){
+                    mOnStartDragListener.onStartDrag(firebaseRestaurantViewHolder);
+                }
+                return false;
+            }
+        });
         firebaseRestaurantViewHolder.bindRestaurant(restaurant);
     }
 

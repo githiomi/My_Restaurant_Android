@@ -2,6 +2,7 @@ package com.moringaschool.myrestaurant.ui;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -10,10 +11,12 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
+import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -22,10 +25,13 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.moringaschool.myrestaurant.R;
+import com.moringaschool.myrestaurant.adapters.FirebaseRestaurantListAdapter;
 import com.moringaschool.myrestaurant.adapters.FirebaseRestaurantViewHolder;
 import com.moringaschool.myrestaurant.adapters.RestaurantListAdapter;
 import com.moringaschool.myrestaurant.models.Business;
 import com.moringaschool.myrestaurant.models.Constants;
+import com.moringaschool.myrestaurant.util.OnStartDragListener;
+import com.moringaschool.myrestaurant.util.SimpleItemTouchHelperCallback;
 
 
 import java.util.ArrayList;
@@ -33,14 +39,17 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class SavedRestaurantListActivity extends AppCompatActivity {
+public class SavedRestaurantListActivity extends AppCompatActivity implements OnStartDragListener {
     private DatabaseReference mRestaurantReference;
-    private RestaurantListAdapter mAdapter;
+    private FirebaseRestaurantListAdapter mFirebaseAdapter;
+    private ItemTouchHelper mItemTouchHelper;
 
     @BindView(R.id.nameTextView)
     TextView mTextVIew;
     @BindView(R.id.rvRestaurants)
     RecyclerView mRecyclerView;
+    @BindView(R.id.progressBar)
+    ProgressBar mProgressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,26 +63,18 @@ public class SavedRestaurantListActivity extends AppCompatActivity {
 
     public void retrieveRestaurants() {
 
-        final ArrayList<Business> restaurants = new ArrayList<>();
-
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        String userId = user.getUid();
-        String username = user.getDisplayName();
+        String uid = user.getUid();
+        mRestaurantReference = FirebaseDatabase.getInstance().getReference(Constants.FIREBASE_CHILD_RESTAURANTS).child(uid);
+        FirebaseRecyclerOptions<Business> options =
+                new FirebaseRecyclerOptions.Builder<Business>()
+                        .setQuery(mRestaurantReference, Business.class)
+                        .build();
 
-        mRestaurantReference = FirebaseDatabase.getInstance()
-                .getReference(Constants.FIREBASE_CHILD_RESTAURANTS)
-                .child(username);
+        mFirebaseAdapter = new FirebaseRestaurantListAdapter(options, mRestaurantReference, this, this);
 
-        mRestaurantReference.addListenerForSingleValueEvent(new ValueEventListener() {
 
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    restaurants.add(snapshot.getValue(Business.class));
-                }
-
-                mAdapter = new RestaurantListAdapter(SavedRestaurantListActivity.this,restaurants);
-                mRecyclerView.setAdapter(mAdapter);
+                mRecyclerView.setAdapter(mFirebaseAdapter);
                 RecyclerView.LayoutManager layoutManager =
                         new LinearLayoutManager(SavedRestaurantListActivity.this);
                 mRecyclerView.setLayoutManager(layoutManager);
@@ -82,19 +83,19 @@ public class SavedRestaurantListActivity extends AppCompatActivity {
 //        Custom method to hide the progress bar and show list
                 showRestaurants();
 
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                Toast.makeText(SavedRestaurantListActivity.this, "Error " + databaseError , Toast.LENGTH_SHORT).show();
-            }
-        });
-
+                ItemTouchHelper.Callback callback = new SimpleItemTouchHelperCallback(mFirebaseAdapter);
+                mItemTouchHelper = new ItemTouchHelper(callback);
+                mItemTouchHelper.attachToRecyclerView(mRecyclerView);
     }
 
     private void showRestaurants() {
         mTextVIew.setVisibility(View.GONE);
         mRecyclerView.setVisibility(View.VISIBLE);
+        mProgressBar.setVisibility(View.GONE);
+    }
+
+    public void onStartDrag(RecyclerView.ViewHolder viewHolder){
+        mItemTouchHelper.startDrag(viewHolder);
     }
 
 }

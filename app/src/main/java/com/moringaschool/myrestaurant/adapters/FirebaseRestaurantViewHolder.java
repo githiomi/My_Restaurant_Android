@@ -36,6 +36,9 @@ public class FirebaseRestaurantViewHolder extends RecyclerView.ViewHolder implem
 //    Firebase database
     private DatabaseReference mDatabaseReference;
 
+//    Local variables
+    public ImageView mRestaurantImageView;
+
     public FirebaseRestaurantViewHolder(View itemView) {
         super(itemView);
         mView = itemView;
@@ -43,13 +46,13 @@ public class FirebaseRestaurantViewHolder extends RecyclerView.ViewHolder implem
         itemView.setOnClickListener(this);
     }
 
-    public void bindRestaurant(Restaurant restaurant) {
-        ImageView restaurantImageView = (ImageView) mView.findViewById(R.id.restaurantImageView);
+    public void bindRestaurant(Business restaurant) {
+        mRestaurantImageView = (ImageView) mView.findViewById(R.id.restaurantImageView);
         TextView nameTextView = (TextView) mView.findViewById(R.id.restaurantNameTextView);
         TextView categoryTextView = (TextView) mView.findViewById(R.id.categoryTextView);
         TextView ratingTextView = (TextView) mView.findViewById(R.id.ratingTextView);
 
-        Picasso.get().load(restaurant.getImageUrl()).into(restaurantImageView);
+        Picasso.get().load(restaurant.getImageUrl()).into(mRestaurantImageView);
 
         nameTextView.setText(restaurant.getName());
         categoryTextView.setText(restaurant.getCategories().get(0).toString());
