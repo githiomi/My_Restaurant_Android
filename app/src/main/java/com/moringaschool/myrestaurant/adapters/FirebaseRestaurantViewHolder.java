@@ -58,37 +58,6 @@ public class FirebaseRestaurantViewHolder extends RecyclerView.ViewHolder implem
 
     @Override
     public void onClick(View view) {
-        final ArrayList<Business> restaurants = new ArrayList<>();
 
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        String userId = user.getUid();
-        String username = user.getDisplayName();
-
-        mDatabaseReference = FirebaseDatabase.getInstance()
-                .getReference(Constants.FIREBASE_CHILD_RESTAURANTS)
-                .child(username);
-
-        mDatabaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
-
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    restaurants.add(snapshot.getValue(Business.class));
-                }
-
-                int itemPosition = getLayoutPosition();
-
-                Intent intent = new Intent(mContext, RestaurantDetailActivity.class);
-                intent.putExtra("position", itemPosition + "");
-                intent.putExtra("restaurants", Parcels.wrap(restaurants));
-
-                mContext.startActivity(intent);
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                Toast.makeText(mContext, "Error " + databaseError , Toast.LENGTH_SHORT).show();
-            }
-        });
     }
 }
