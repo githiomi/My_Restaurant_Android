@@ -14,7 +14,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
-import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -36,7 +35,6 @@ import butterknife.ButterKnife;
 
 public class SavedRestaurantListActivity extends AppCompatActivity {
     private DatabaseReference mRestaurantReference;
-    private FirebaseRecyclerAdapter<Business, FirebaseRestaurantViewHolder> mFirebaseAdapter;
     private RestaurantListAdapter mAdapter;
 
     @BindView(R.id.nameTextView)
@@ -50,7 +48,12 @@ public class SavedRestaurantListActivity extends AppCompatActivity {
         setContentView(R.layout.activity_restaurants);
         ButterKnife.bind(this);
 
-        mTextVIew.setVisibility(View.GONE);
+        // Custom method th get restaurants from firebase
+        retrieveRestaurants();
+    }
+
+    public void retrieveRestaurants() {
+
         final ArrayList<Business> restaurants = new ArrayList<>();
 
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
@@ -69,8 +72,6 @@ public class SavedRestaurantListActivity extends AppCompatActivity {
                     restaurants.add(snapshot.getValue(Business.class));
                 }
 
-                RestaurantListAdapter mAdapter;
-
                 mAdapter = new RestaurantListAdapter(SavedRestaurantListActivity.this,restaurants);
                 mRecyclerView.setAdapter(mAdapter);
                 RecyclerView.LayoutManager layoutManager =
@@ -78,7 +79,7 @@ public class SavedRestaurantListActivity extends AppCompatActivity {
                 mRecyclerView.setLayoutManager(layoutManager);
                 mRecyclerView.setHasFixedSize(true);
 
-
+//        Custom method to hide the progress bar and show list
                 showRestaurants();
 
             }
@@ -89,10 +90,10 @@ public class SavedRestaurantListActivity extends AppCompatActivity {
             }
         });
 
-
     }
 
     private void showRestaurants() {
+        mTextVIew.setVisibility(View.GONE);
         mRecyclerView.setVisibility(View.VISIBLE);
     }
 
