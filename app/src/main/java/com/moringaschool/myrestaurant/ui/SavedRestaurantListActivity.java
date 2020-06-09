@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,6 +41,10 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class SavedRestaurantListActivity extends AppCompatActivity implements OnStartDragListener {
+
+//    TAG
+    private static final String TAG = SavedRestaurantListActivity.class.getSimpleName();
+
     private DatabaseReference mRestaurantReference;
     private FirebaseRestaurantListAdapter mFirebaseAdapter;
     private ItemTouchHelper mItemTouchHelper;
@@ -65,7 +70,12 @@ public class SavedRestaurantListActivity extends AppCompatActivity implements On
 
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         String uid = user.getUid();
-        mRestaurantReference = FirebaseDatabase.getInstance().getReference(Constants.FIREBASE_CHILD_RESTAURANTS).child(uid);
+        String username = user.getDisplayName();
+
+        Log.d(TAG, "retrieveRestaurants: username " + username);
+
+        mRestaurantReference = FirebaseDatabase.getInstance().getReference(Constants.FIREBASE_CHILD_RESTAURANTS).child(username);
+
         FirebaseRecyclerOptions<Business> options =
                 new FirebaseRecyclerOptions.Builder<Business>()
                         .setQuery(mRestaurantReference, Business.class)
@@ -80,12 +90,12 @@ public class SavedRestaurantListActivity extends AppCompatActivity implements On
                 mRecyclerView.setLayoutManager(layoutManager);
                 mRecyclerView.setHasFixedSize(true);
 
-//        Custom method to hide the progress bar and show list
-                showRestaurants();
-
                 ItemTouchHelper.Callback callback = new SimpleItemTouchHelperCallback(mFirebaseAdapter);
                 mItemTouchHelper = new ItemTouchHelper(callback);
                 mItemTouchHelper.attachToRecyclerView(mRecyclerView);
+
+        //        Custom method to hide the progress bar and show list
+                showRestaurants();
     }
 
     private void showRestaurants() {
