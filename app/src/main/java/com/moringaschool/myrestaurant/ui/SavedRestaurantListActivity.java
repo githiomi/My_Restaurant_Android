@@ -52,10 +52,12 @@ public class SavedRestaurantListActivity
     private ItemTouchHelper mItemTouchHelper;
     private OnStartDragListener onStartDragListener = this;
 
+//    indexing
+    private Query mQuery;
+
     @BindView(R.id.progressBar) ProgressBar mProgressBar;
     @BindView(R.id.nameTextView) TextView mNameTextView;
     @BindView(R.id.rvRestaurants) RecyclerView mRecyclerView;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,29 +68,29 @@ public class SavedRestaurantListActivity
         mNameTextView.setVisibility(View.GONE);
         getSupportActionBar().setTitle("Saved Restaurants");
 
-
         final ArrayList<Business> restaurants = new ArrayList<>();
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         String username = user.getDisplayName();
 
-        mRestaurantReference = FirebaseDatabase.getInstance().getReference(Constants.FIREBASE_CHILD_RESTAURANTS).child(username);
+        mQuery = FirebaseDatabase.getInstance()
+                .getReference(Constants.FIREBASE_CHILD_RESTAURANTS)
+                .child(username)
+                .orderByChild(Constants.FIREBASE_QUERY_INDEX);
 
         FirebaseRecyclerOptions<Business> options = new FirebaseRecyclerOptions.Builder<Business>()
-                .setQuery(mRestaurantReference, Business.class)
+                .setQuery(mQuery, Business.class)
                 .build();
 
-        mFirebaseAdapter = new FirebaseRestaurantListAdapter(restaurants, options, mRestaurantReference, onStartDragListener, SavedRestaurantListActivity.this);
+        mFirebaseAdapter = new FirebaseRestaurantListAdapter(restaurants, options, mQuery, onStartDragListener, SavedRestaurantListActivity.this);
 
 
-        mRestaurantReference.addValueEventListener(new ValueEventListener() {
+        mQuery.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
                     for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                         restaurants.add(snapshot.getValue(Business.class));
                     }
-
-//                    mFirebaseAdapter = new FirebaseRestaurantListAdapter(options, mRestaurantReference, onStartDragListener, SavedRestaurantListActivity.this);
 
                     LinearLayoutManager linearLayoutManager = new LinearLayoutManager(SavedRestaurantListActivity.this);
 
@@ -109,36 +111,10 @@ public class SavedRestaurantListActivity
         });
     }
 
-
-//        mRestaurantReference.addListenerForSingleValueEvent(new ValueEventListener() {
-//
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-//                    restaurants.add(snapshot.getValue(Business.class));
-//                }
-//                mAdapter= new FirebaseRestaurantListAdapter(SavedRestaurantListActivity.this, restaurants);
-//                mRecyclerView.setAdapter(mAdapter);
-//                RecyclerView.LayoutManager layoutManager =
-//                        new LinearLayoutManager(SavedRestaurantListActivity.this);
-//                mRecyclerView.setLayoutManager(layoutManager);
-//                mRecyclerView.setHasFixedSize(true);
-//                ItemTouchHelper.Callback callback = new SimpleItemTouchHelperCallback(mAdapter);
-//                mItemTouchHelper = new ItemTouchHelper(callback);
-//                mItemTouchHelper.attachToRecyclerView(mRecyclerView);
-//                showRestaurants();
-//            }
-//
-//            @Override
-//            public void onCancelled(DatabaseError databaseError) {
-//            }
-//        });
-
     private void showRestaurants() {
         mRecyclerView.setVisibility(View.VISIBLE);
         mProgressBar.setVisibility(View.GONE);
     }
-
 
     @Override
     public void onStartDrag(RecyclerView.ViewHolder viewHolder) {
@@ -162,6 +138,7 @@ public class SavedRestaurantListActivity
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        mFirebaseAdapter.stopListening();
     }
 
 

@@ -14,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
@@ -21,8 +22,11 @@ import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.gson.internal.$Gson$Preconditions;
 import com.moringaschool.myrestaurant.R;
 import com.moringaschool.myrestaurant.models.Business;
@@ -47,28 +51,57 @@ public class FirebaseRestaurantListAdapter
         implements ItemTouchHelperAdapter {
 
     private ArrayList<Business> mRestaurants;
+    private ChildEventListener mChildEventListener;
     private Context mContext;
     private OnStartDragListener mOnStartDragListener;
     private DatabaseReference mRef;
+    private Query mQuery;
 
     public FirebaseRestaurantListAdapter(ArrayList<Business> restaurants,
                                          FirebaseRecyclerOptions<Business> options,
-                                         DatabaseReference ref,
+                                         Query query,
                                          OnStartDragListener onStartDragListener,
                                          Context context) {
         super(options);
         this.mRestaurants = restaurants;
-        this.mRef = ref.getRef();
+        this.mQuery = query;
+        this.mRef = query.getRef();
         this.mOnStartDragListener = onStartDragListener;
         this.mContext = context;
+
+        mChildEventListener = new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                mRestaurants.add(dataSnapshot.getValue(Business.class));
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        };
+
     }
 
     @NonNull
     @Override
     public FirebaseRestaurantViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.restaurant_list_item_drag, parent, false);
-//        FirebaseRestaurantListAdapter.SavedRestaurantViewHolder viewHolder = new FirebaseRestaurantListAdapter.SavedRestaurantViewHolder(view);
-
         return new FirebaseRestaurantViewHolder(view);
     }
 
@@ -95,43 +128,40 @@ public class FirebaseRestaurantListAdapter
 
     @Override
     public boolean onItemMove(int fromPosition, int toPosition) {
+        Collections.swap(mRestaurants, fromPosition, toPosition);
         notifyItemMoved(fromPosition, toPosition);
-//        Collections.swap(mRestaurants, fromPosition, toPosition);
-//        notifyItemMoved(fromPosition, toPosition);
-//        setIndexInFirebase();
+        setIndexInFirebase();
         return false;
     }
 
     @Override
     public void onItemDismiss(int position) {
         getRef(position).removeValue();
-//        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-//        String uid = user.getUid();
-//        String restaurantId=mRestaurants.get(position).getPushId();
-//        DatabaseReference mRestaurantReference = FirebaseDatabase.getInstance().getReference(Constants.FIREBASE_CHILD_RESTAURANTS).child(uid);
-//        mRestaurantReference.child(restaurantId).removeValue();
+        mRestaurants.remove(position);
 
     }
 
     private void setIndexInFirebase() {
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        String username = user.getDisplayName();
 
         for (Business restaurant : mRestaurants) {
-            String restaurantId=restaurant.getPushId();
-            DatabaseReference mRestaurantReference = FirebaseDatabase.getInstance().getReference(Constants.FIREBASE_CHILD_RESTAURANTS).child(username).child(restaurantId);
             int index = mRestaurants.indexOf(restaurant);
-            mRestaurantReference.getRef();
+            DatabaseReference ref = getRef(index);
             restaurant.setIndex(Integer.toString(index));
-            mRestaurantReference.setValue(restaurant);
+            ref.setValue(restaurant);
         }
+
     }
 
+
     public class SavedRestaurantViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        @BindView(R.id.restaurantImageView) public ImageView mRestaurantImageView;
-        @BindView(R.id.restaurantNameTextView) TextView mNameTextView;
-        @BindView(R.id.categoryTextView) TextView mCategoryTextView;
-        @BindView(R.id.ratingTextView) TextView mRatingTextView;
+        @BindView(R.id.restaurantImageView)
+        public ImageView mRestaurantImageView;
+        @BindView(R.id.restaurantNameTextView)
+        TextView mNameTextView;
+        @BindView(R.id.categoryTextView)
+        TextView mCategoryTextView;
+        @BindView(R.id.ratingTextView)
+        TextView mRatingTextView;
         private Context mContext;
 
         public SavedRestaurantViewHolder(@NonNull View itemView) {
@@ -153,7 +183,7 @@ public class FirebaseRestaurantListAdapter
         public void onClick(View v) {
             int itemPosition = getLayoutPosition();
             Intent intent = new Intent(mContext, RestaurantDetailActivity.class);
-            intent.putExtra("position",itemPosition);
+            intent.putExtra("position", itemPosition);
             intent.putExtra("restaurants", Parcels.wrap(mRestaurants));
             mContext.startActivity(intent);
 
@@ -187,5 +217,11 @@ public class FirebaseRestaurantListAdapter
 //            set.start();
 //
 //        }
+    }
+
+    @Override
+    public void stopListening() {
+        super.stopListening();
+        mQuery.removeEventListener(mChildEventListener);
     }
 }
