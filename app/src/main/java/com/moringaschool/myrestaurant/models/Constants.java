@@ -17,6 +17,9 @@ public class Constants {
     public static final String FIREBASE_USERNAME_KEY = "Username";
     public static final String FIREBASE_LOCATION_KEY = "Location";
 
+//    Firebase indexing
+    public static final String FIREBASE_QUERY_INDEX = "index";
+
 
     public static FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
 }

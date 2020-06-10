@@ -119,22 +119,20 @@ public class RestaurantDetailFragment extends Fragment implements View.OnClickLi
         }
         if (v == mSaveRestaurantButton){
             FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-            String uId = user.getUid();
             String username = user.getDisplayName();
 
-            DatabaseReference ref = FirebaseDatabase.getInstance()
+            DatabaseReference restaurantRef = FirebaseDatabase
+                    .getInstance()
                     .getReference(Constants.FIREBASE_CHILD_RESTAURANTS)
-                    .child(username)
-                    .child(mRestaurant.name);
+                    .child(username);
 
-            DatabaseReference databaseReference = ref.push();
-            String pushId = databaseReference.getKey();
-            Restaurant mRest = new Restaurant();
-            mRest.setPushId(pushId);
-            ref.setValue(mRestaurant);
+            DatabaseReference pushRef = restaurantRef.push();
+            String pushId = pushRef.getKey();
+            mRestaurant.setPushId(pushId);
+            pushRef.setValue(mRestaurant);
 
-            //  Visual confirmation of addition to database
-            Toast.makeText(getContext(), "Saved " + mRestaurant.getName() + " to database!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), "Saved " +mRestaurant.getName(), Toast.LENGTH_SHORT).show();
+
         }
     }
 }

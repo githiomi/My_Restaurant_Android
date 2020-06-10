@@ -11,8 +11,7 @@ public class Restaurant {
     String name;
     String phone;
     String website;
-    double rating;
-    String imageUrl;
+    double rating;String imageUrl;
     List<String> address = new ArrayList<>();
     double latitude;
     double longitude;
@@ -21,7 +20,9 @@ public class Restaurant {
 
     public Restaurant() {}
 
-    public Restaurant(String name, String phone, String website, double rating, String imageUrl, ArrayList<String> address, double latitude, double longitude, ArrayList<String> categories) {
+    public Restaurant(String name, String phone, String website,
+                      double rating, String imageUrl, ArrayList<String> address,
+                      double latitude, double longitude, ArrayList<String> categories) {
         this.name = name;
         this.phone = phone;
         this.website = website;
@@ -42,15 +43,18 @@ public class Restaurant {
     }
 
     public String getWebsite() {
-        return website;
+        return  website;
     }
 
     public double getRating() {
         return rating;
     }
 
-    public String getImageUrl() {
-        return imageUrl;
+    public String getImageUrl() { return imageUrl;}
+
+    public String getLargeImageUrl(String imageUrl) {
+        String largeImageUrl = imageUrl.substring(0, imageUrl.length() - 6).concat("o.jpg");
+        return largeImageUrl;
     }
 
     public List<String> getAddress() {
@@ -67,11 +71,6 @@ public class Restaurant {
 
     public List<String> getCategories() {
         return categories;
-    }
-
-    public String getLargeImageUrl(String imageUrl) {
-        String largeImageUrl = imageUrl.substring(0, imageUrl.length() - 6).concat("o.jpg");
-        return largeImageUrl;
     }
 
     public String getPushId() {

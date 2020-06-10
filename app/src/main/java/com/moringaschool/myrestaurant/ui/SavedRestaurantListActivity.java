@@ -20,10 +20,12 @@ import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.moringaschool.myrestaurant.R;
 import com.moringaschool.myrestaurant.adapters.FirebaseRestaurantListAdapter;
@@ -41,17 +43,15 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class SavedRestaurantListActivity extends AppCompatActivity implements OnStartDragListener {
-
-//    TAG
-    private static final String TAG = SavedRestaurantListActivity.class.getSimpleName();
-
-    private DatabaseReference mRestaurantReference;
-    private FirebaseRestaurantListAdapter mFirebaseAdapter;
+    private Query mRestaurantReference;
+    //private FirebaseRecyclerAdapter<Restaurant, FirebaseRestaurantViewHolder> mFirebaseAdapter;
+    private FirebaseRestaurantListAdapter mAdapter;
     private ItemTouchHelper mItemTouchHelper;
-
-    @BindView(R.id.nameTextView) TextView mTextVIew;
-    @BindView(R.id.rvRestaurants) RecyclerView mRecyclerView;
     @BindView(R.id.progressBar) ProgressBar mProgressBar;
+    @BindView(R.id.nameTextView) TextView mNameTextView;
+    @BindView(R.id.rvRestaurants) RecyclerView mRecyclerView;
+    private ChildEventListener mChildEventListener;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,51 +59,93 @@ public class SavedRestaurantListActivity extends AppCompatActivity implements On
         setContentView(R.layout.activity_restaurants);
         ButterKnife.bind(this);
 
-        // Custom method th get restaurants from firebase
-        retrieveRestaurants();
-    }
+        //mRestaurantReference = FirebaseDatabase.getInstance().getReference(Constants.FIREBASE_CHILD_RESTAURANTS);
 
-    public void retrieveRestaurants() {
 
+        final ArrayList<Business> restaurants = new ArrayList<>();
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        String uid = user.getUid();
         String username = user.getDisplayName();
+        mRestaurantReference = FirebaseDatabase.getInstance().getReference(Constants.FIREBASE_CHILD_RESTAURANTS).child(username).orderByChild(Constants.FIREBASE_QUERY_INDEX);
+        mRestaurantReference.addListenerForSingleValueEvent(new ValueEventListener() {
 
-        Log.d(TAG, "retrieveRestaurants: username " + username + "-------------------");
-
-        mRestaurantReference = FirebaseDatabase.getInstance()
-                .getReference(Constants.FIREBASE_CHILD_RESTAURANTS)
-                .child(username);
-
-        FirebaseRecyclerOptions<Business> options =
-                new FirebaseRecyclerOptions.Builder<Business>()
-                        .setQuery(mRestaurantReference, Business.class)
-                        .build();
-
-        mFirebaseAdapter = new FirebaseRestaurantListAdapter(options, mRestaurantReference, this, this);
-
-                mRecyclerView.setAdapter(mFirebaseAdapter);
-
-                RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    restaurants.add(snapshot.getValue(Business.class));
+                }
+                mAdapter= new FirebaseRestaurantListAdapter(SavedRestaurantListActivity.this,restaurants);
+                mRecyclerView.setAdapter(mAdapter);
+                RecyclerView.LayoutManager layoutManager =
+                        new LinearLayoutManager(SavedRestaurantListActivity.this);
                 mRecyclerView.setLayoutManager(layoutManager);
                 mRecyclerView.setHasFixedSize(true);
-
-                ItemTouchHelper.Callback callback = new SimpleItemTouchHelperCallback(mFirebaseAdapter);
+                ItemTouchHelper.Callback callback = new SimpleItemTouchHelperCallback(mAdapter);
                 mItemTouchHelper = new ItemTouchHelper(callback);
                 mItemTouchHelper.attachToRecyclerView(mRecyclerView);
-
-        //        Custom method to hide the progress bar and show list
                 showRestaurants();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        });
+//        mChildEventListener=mRestaurantReference.addChildEventListener(new ChildEventListener() {
+//            @Override
+//            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+////                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+////                    restaurants.add(snapshot.getValue(Business.class));
+////                }
+//                restaurants.add(dataSnapshot.getValue(Business.class));
+//                mAdapter=new SavedRestaurantsAdapter(SavedRestaurantListActivity.this,restaurants);
+//                mRecyclerView.setAdapter(mAdapter);
+//                RecyclerView.LayoutManager layoutManager =
+//                        new LinearLayoutManager(SavedRestaurantListActivity.this);
+//                mRecyclerView.setLayoutManager(layoutManager);
+//                mRecyclerView.setHasFixedSize(true);
+//                ItemTouchHelper.Callback callback = new SimpleItemTouchHelperCallback(mAdapter);
+//                mItemTouchHelper = new ItemTouchHelper(callback);
+//                mItemTouchHelper.attachToRecyclerView(mRecyclerView);
+//                showRestaurants();
+//
+//            }
+//
+//            @Override
+//            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+//
+//            }
+//
+//            @Override
+//            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+//
+//            }
+//
+//            @Override
+//            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+//
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError databaseError) {
+//
+//            }
+//        });
+
     }
 
     private void showRestaurants() {
-        mTextVIew.setVisibility(View.GONE);
+        mNameTextView.setVisibility(View.GONE);
         mRecyclerView.setVisibility(View.VISIBLE);
         mProgressBar.setVisibility(View.GONE);
     }
 
-    public void onStartDrag(RecyclerView.ViewHolder viewHolder){
-        mItemTouchHelper.startDrag(viewHolder);
-    }
 
+    @Override
+    public void onStartDrag(RecyclerView.ViewHolder viewHolder) {
+        mItemTouchHelper.startDrag(viewHolder);
+
+    }
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+    }
 }

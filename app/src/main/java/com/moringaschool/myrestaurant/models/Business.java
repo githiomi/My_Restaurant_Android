@@ -11,56 +11,59 @@ public class Business {
 
     @SerializedName("rating")
     @Expose
-    public Double rating;
+    private Double rating;
     @SerializedName("price")
     @Expose
-    public String price;
+    private String price;
     @SerializedName("phone")
     @Expose
-    public String phone;
+    private String phone;
     @SerializedName("id")
     @Expose
-    public String id;
+    private String id;
     @SerializedName("alias")
     @Expose
-    public String alias;
+    private String alias;
     @SerializedName("is_closed")
     @Expose
-    public Boolean isClosed;
+    private Boolean isClosed;
     @SerializedName("categories")
     @Expose
-    public List<Category> categories;
+    private List<Category> categories = null;
     @SerializedName("review_count")
     @Expose
-    public Integer reviewCount;
+    private Integer reviewCount;
     @SerializedName("name")
     @Expose
-    public String name;
+    private String name;
     @SerializedName("url")
     @Expose
-    public String url;
+    private String url;
     @SerializedName("coordinates")
     @Expose
-    public Coordinates coordinates;
+    private Coordinates coordinates;
     @SerializedName("image_url")
     @Expose
-    public String imageUrl;
+    private String imageUrl;
     @SerializedName("location")
     @Expose
-    public Location location;
+    private Location location;
     @SerializedName("distance")
     @Expose
-    public Double distance;
+    private Double distance;
     @SerializedName("transactions")
     @Expose
-    public List<String> transactions = null;
-
+    private List<String> transactions = null;
+    @SerializedName("pushid")
+    @Expose
+    private String pushId;
+    @SerializedName("index")
+    @Expose
+    private String index;
     /**
      * No args constructor for use in serialization
      *
      */
-
-//    Empty array for the parceler library
     public Business() {
     }
 
@@ -99,6 +102,7 @@ public class Business {
         this.location = location;
         this.distance = distance;
         this.transactions = transactions;
+        this.index = "not_specified";
     }
 
     public Double getRating() {
@@ -219,6 +223,20 @@ public class Business {
 
     public void setTransactions(List<String> transactions) {
         this.transactions = transactions;
+    }
+    public String getPushId() {
+        return pushId;
+    }
+
+    public void setPushId(String pushId) {
+        this.pushId = pushId;
+    }
+    public String getIndex() {
+        return index;
+    }
+
+    public void setIndex(String index) {
+        this.index = index;
     }
 
 }
