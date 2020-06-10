@@ -59,7 +59,7 @@ public class Business {
     private String pushId;
     @SerializedName("index")
     @Expose
-    private String index;
+    String index;
     /**
      * No args constructor for use in serialization
      *
@@ -231,6 +231,7 @@ public class Business {
     public void setPushId(String pushId) {
         this.pushId = pushId;
     }
+
     public String getIndex() {
         return index;
     }

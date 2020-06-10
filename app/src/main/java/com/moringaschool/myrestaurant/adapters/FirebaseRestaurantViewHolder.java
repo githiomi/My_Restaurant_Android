@@ -3,6 +3,7 @@ package com.moringaschool.myrestaurant.adapters;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
+import android.media.Image;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -32,6 +33,7 @@ public class FirebaseRestaurantViewHolder extends RecyclerView.ViewHolder implem
 
     View mView;
     Context mContext;
+    public ImageView imageView;
 
     public FirebaseRestaurantViewHolder(View itemView) {
         super(itemView);
@@ -40,16 +42,16 @@ public class FirebaseRestaurantViewHolder extends RecyclerView.ViewHolder implem
         itemView.setOnClickListener(this);
     }
 
-    public void bindRestaurant(Restaurant restaurant) {
-        ImageView restaurantImageView = (ImageView) mView.findViewById(R.id.restaurantImageView);
+    public void bindRestaurant(Business restaurant) {
+        imageView = (ImageView) mView.findViewById(R.id.restaurantImageView);
         TextView nameTextView = (TextView) mView.findViewById(R.id.restaurantNameTextView);
         TextView categoryTextView = (TextView) mView.findViewById(R.id.categoryTextView);
         TextView ratingTextView = (TextView) mView.findViewById(R.id.ratingTextView);
 
-        Picasso.get().load(restaurant.getImageUrl()).into(restaurantImageView);
+        Picasso.get().load(restaurant.getImageUrl()).into(imageView);
 
         nameTextView.setText(restaurant.getName());
-        categoryTextView.setText(restaurant.getCategories().get(0));
+        categoryTextView.setText(restaurant.getCategories().get(0).getTitle());
         ratingTextView.setText("Rating: " + restaurant.getRating() + "/5");
     }
 
