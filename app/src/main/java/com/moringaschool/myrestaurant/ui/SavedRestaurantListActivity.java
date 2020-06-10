@@ -49,12 +49,9 @@ public class SavedRestaurantListActivity extends AppCompatActivity implements On
     private FirebaseRestaurantListAdapter mFirebaseAdapter;
     private ItemTouchHelper mItemTouchHelper;
 
-    @BindView(R.id.nameTextView)
-    TextView mTextVIew;
-    @BindView(R.id.rvRestaurants)
-    RecyclerView mRecyclerView;
-    @BindView(R.id.progressBar)
-    ProgressBar mProgressBar;
+    @BindView(R.id.nameTextView) TextView mTextVIew;
+    @BindView(R.id.rvRestaurants) RecyclerView mRecyclerView;
+    @BindView(R.id.progressBar) ProgressBar mProgressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,9 +69,11 @@ public class SavedRestaurantListActivity extends AppCompatActivity implements On
         String uid = user.getUid();
         String username = user.getDisplayName();
 
-        Log.d(TAG, "retrieveRestaurants: username " + username);
+        Log.d(TAG, "retrieveRestaurants: username " + username + "-------------------");
 
-        mRestaurantReference = FirebaseDatabase.getInstance().getReference(Constants.FIREBASE_CHILD_RESTAURANTS).child(username);
+        mRestaurantReference = FirebaseDatabase.getInstance()
+                .getReference(Constants.FIREBASE_CHILD_RESTAURANTS)
+                .child(username);
 
         FirebaseRecyclerOptions<Business> options =
                 new FirebaseRecyclerOptions.Builder<Business>()
@@ -83,10 +82,9 @@ public class SavedRestaurantListActivity extends AppCompatActivity implements On
 
         mFirebaseAdapter = new FirebaseRestaurantListAdapter(options, mRestaurantReference, this, this);
 
-
                 mRecyclerView.setAdapter(mFirebaseAdapter);
-                RecyclerView.LayoutManager layoutManager =
-                        new LinearLayoutManager(SavedRestaurantListActivity.this);
+
+                RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
                 mRecyclerView.setLayoutManager(layoutManager);
                 mRecyclerView.setHasFixedSize(true);
 

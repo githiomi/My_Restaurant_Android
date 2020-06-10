@@ -17,7 +17,11 @@ import com.moringaschool.myrestaurant.models.Restaurant;
 import com.moringaschool.myrestaurant.util.ItemTouchHelperAdapter;
 import com.moringaschool.myrestaurant.util.OnStartDragListener;
 
-public class FirebaseRestaurantListAdapter extends FirebaseRecyclerAdapter<Business, FirebaseRestaurantViewHolder> implements ItemTouchHelperAdapter {
+public class FirebaseRestaurantListAdapter
+        extends FirebaseRecyclerAdapter<Business, FirebaseRestaurantViewHolder>
+        implements ItemTouchHelperAdapter {
+
+
 //    Local variables
     private DatabaseReference mRef;
     private OnStartDragListener mOnStartDragListener;
@@ -36,10 +40,11 @@ public class FirebaseRestaurantListAdapter extends FirebaseRecyclerAdapter<Busin
     @Override
     protected void onBindViewHolder(@NonNull FirebaseRestaurantViewHolder firebaseRestaurantViewHolder, int position, @NonNull Business restaurant) {
         firebaseRestaurantViewHolder.bindRestaurant(restaurant);
+
         firebaseRestaurantViewHolder.mRestaurantImageView.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                if ( event.getActionMasked() == MotionEvent.ACTION_DOWN ){
+                if ( event.getActionMasked() == MotionEvent.ACTION_DOWN){
                     mOnStartDragListener.onStartDrag(firebaseRestaurantViewHolder);
                 }
                 return false;
@@ -57,11 +62,12 @@ public class FirebaseRestaurantListAdapter extends FirebaseRecyclerAdapter<Busin
 
     @Override
     public boolean onItemMove(int fromPosition, int toPosition){
+        notifyItemMoved(fromPosition, toPosition);
         return false;
     }
 
     @Override
     public void onItemDismiss(int position){
-
+        getRef(position).removeValue();
     }
 }
