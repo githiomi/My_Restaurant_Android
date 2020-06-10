@@ -1,5 +1,5 @@
 
-package com.moringaschool.myrestaurant;
+package com.moringaschool.myrestaurant.models;
 
 import java.util.List;
 import com.google.gson.annotations.Expose;

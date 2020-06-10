@@ -44,13 +44,12 @@ import butterknife.ButterKnife;
 
 public class SavedRestaurantListActivity extends AppCompatActivity implements OnStartDragListener {
     private Query mRestaurantReference;
-    //private FirebaseRecyclerAdapter<Restaurant, FirebaseRestaurantViewHolder> mFirebaseAdapter;
     private FirebaseRestaurantListAdapter mAdapter;
     private ItemTouchHelper mItemTouchHelper;
+
     @BindView(R.id.progressBar) ProgressBar mProgressBar;
     @BindView(R.id.nameTextView) TextView mNameTextView;
     @BindView(R.id.rvRestaurants) RecyclerView mRecyclerView;
-    private ChildEventListener mChildEventListener;
 
 
     @Override
@@ -59,7 +58,8 @@ public class SavedRestaurantListActivity extends AppCompatActivity implements On
         setContentView(R.layout.activity_restaurants);
         ButterKnife.bind(this);
 
-        //mRestaurantReference = FirebaseDatabase.getInstance().getReference(Constants.FIREBASE_CHILD_RESTAURANTS);
+        mNameTextView.setVisibility(View.GONE);
+        getSupportActionBar().setTitle("Saved Restaurants");
 
 
         final ArrayList<Business> restaurants = new ArrayList<>();
@@ -73,7 +73,7 @@ public class SavedRestaurantListActivity extends AppCompatActivity implements On
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     restaurants.add(snapshot.getValue(Business.class));
                 }
-                mAdapter= new FirebaseRestaurantListAdapter(SavedRestaurantListActivity.this,restaurants);
+                mAdapter= new FirebaseRestaurantListAdapter(SavedRestaurantListActivity.this, restaurants);
                 mRecyclerView.setAdapter(mAdapter);
                 RecyclerView.LayoutManager layoutManager =
                         new LinearLayoutManager(SavedRestaurantListActivity.this);
@@ -133,7 +133,6 @@ public class SavedRestaurantListActivity extends AppCompatActivity implements On
     }
 
     private void showRestaurants() {
-        mNameTextView.setVisibility(View.GONE);
         mRecyclerView.setVisibility(View.VISIBLE);
         mProgressBar.setVisibility(View.GONE);
     }

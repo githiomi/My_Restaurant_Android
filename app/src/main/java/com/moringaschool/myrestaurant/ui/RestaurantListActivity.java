@@ -20,7 +20,7 @@ import android.widget.SearchView;
 import android.widget.TextView;
 
 import com.moringaschool.myrestaurant.R;
-import com.moringaschool.myrestaurant.YelpBusinessesSearchResponse;
+import com.moringaschool.myrestaurant.models.YelpBusinessesSearchResponse;
 
 import com.moringaschool.myrestaurant.adapters.RestaurantListAdapter;
 import com.moringaschool.myrestaurant.models.Business;
@@ -28,7 +28,6 @@ import com.moringaschool.myrestaurant.models.Business;
 import com.moringaschool.myrestaurant.models.Constants;
 import com.moringaschool.myrestaurant.network.YelpApi;
 import com.moringaschool.myrestaurant.network.YelpClient;
-import com.moringaschool.myrestaurant.network.YelpService;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -45,7 +45,6 @@ public class FirebaseRestaurantListAdapter extends RecyclerView.Adapter<Firebase
     private OnStartDragListener mOnStartDragListener;
     private ChildEventListener mChildEventListener;
 
-
     public FirebaseRestaurantListAdapter(Context mContext, ArrayList<Business> mRestaurants) {
         this.mRestaurants = mRestaurants;
         this.mContext = mContext;
@@ -68,7 +67,7 @@ public class FirebaseRestaurantListAdapter extends RecyclerView.Adapter<Firebase
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 if (event.getActionMasked() == MotionEvent.ACTION_DOWN) {
-                    mOnStartDragListener.onStartDrag(holder);
+//                    mOnStartDragListener.onStartDrag(holder);
                 }
                 return false;
             }
@@ -106,9 +105,7 @@ public class FirebaseRestaurantListAdapter extends RecyclerView.Adapter<Firebase
 
     @Override
     public void onItemDismiss(int position) {
-//        for( DataSnapshot removeDataSnapshot:dataSnapshot.getChildren()){
-//            if(removeDataSnapshot)
-//        }
+
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         String uid = user.getUid();
         String restaurantId=mRestaurants.get(position).getPushId();
@@ -118,15 +115,12 @@ public class FirebaseRestaurantListAdapter extends RecyclerView.Adapter<Firebase
     }
 
     public class SavedRestaurantViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        @BindView(R.id.restaurantImageView)
-        public ImageView mRestaurantImageView;
-        @BindView(R.id.restaurantNameTextView)
-        TextView mNameTextView;
-        @BindView(R.id.categoryTextView)
-        TextView mCategoryTextView;
-        @BindView(R.id.ratingTextView)
-        TextView mRatingTextView;
+        @BindView(R.id.restaurantImageView) public ImageView mRestaurantImageView;
+        @BindView(R.id.restaurantNameTextView) TextView mNameTextView;
+        @BindView(R.id.categoryTextView) TextView mCategoryTextView;
+        @BindView(R.id.ratingTextView) TextView mRatingTextView;
         private Context mContext;
+
         public SavedRestaurantViewHolder(@NonNull View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
