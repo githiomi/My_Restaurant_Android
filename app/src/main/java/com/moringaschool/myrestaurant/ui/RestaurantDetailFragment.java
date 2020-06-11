@@ -93,8 +93,7 @@ public class RestaurantDetailFragment extends Fragment implements View.OnClickLi
         mAddressLabel.setOnClickListener(this);
 
         mSaveRestaurantButton.setOnClickListener(this);
-
-
+        
         return view;
     }
 
