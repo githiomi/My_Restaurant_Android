@@ -14,7 +14,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:textAlignment="center"
-        android:text="Please search for a location first"
+        android:text="No saved restaurants to display"
         android:visibility="gone"
         android:textSize="20sp" />
 

@@ -33,6 +33,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -44,7 +45,7 @@ public class RestaurantListFragment extends Fragment {
 
 //    Binding views using Butter Knife
     @BindView(R.id.recyclerView) RecyclerView mRecyclerView;
-    @BindView(R.id.nameTextView) TextView mHeader;
+    @BindView(R.id.onlyTextView) TextView mInCase;
 
 //    Local variable
     private RestaurantListAdapter mAdapter;
@@ -79,12 +80,16 @@ public class RestaurantListFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_restaurant_list, container, false);
 
+//        Binding view using butter knife
+        ButterKnife.bind(this, view);
+
         mRecentAddress = mSharedPreferences.getString(Constants.YELP_LOCATION_QUERY_PARAMETER, null);
 
-        if ( mRecentAddress != null ){
+        if ( mRecentAddress != null ) {
             getRestaurants(mRecentAddress);
-        }else {
-            mHeader.setText("Please search for a location first");
+        }else{
+            mInCase.setVisibility(View.VISIBLE);
+            mRecyclerView.setVisibility(View.GONE);
         }
 
         return view;
@@ -109,8 +114,6 @@ public class RestaurantListFragment extends Fragment {
                     for (Business restaurant : mRestaurants) {
                         Log.v(TAG, restaurant.getName());
                     }
-
-                    mHeader.setVisibility(View.GONE);
 
                     RestaurantListAdapter mAdapter;
 
