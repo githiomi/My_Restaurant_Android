@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.media.Image;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -23,23 +24,30 @@ import com.moringaschool.myrestaurant.models.Business;
 import com.moringaschool.myrestaurant.models.Constants;
 import com.moringaschool.myrestaurant.models.Restaurant;
 import com.moringaschool.myrestaurant.ui.RestaurantDetailActivity;
+import com.moringaschool.myrestaurant.util.ItemTouchHelperViewHolder;
 import com.squareup.picasso.Picasso;
 
 import org.parceler.Parcels;
 
 import java.util.ArrayList;
 
-public class FirebaseRestaurantViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+public class FirebaseRestaurantViewHolder
+        extends RecyclerView.ViewHolder
+        implements ItemTouchHelperViewHolder {
 
+//    TAG
+    private static final String TAG = FirebaseRestaurantViewHolder.class.getSimpleName();
+
+//    Local variables
     View mView;
     Context mContext;
     public ImageView imageView;
 
+//    vie holder constructor
     public FirebaseRestaurantViewHolder(View itemView) {
         super(itemView);
         mView = itemView;
         mContext = itemView.getContext();
-        itemView.setOnClickListener(this);
     }
 
     public void bindRestaurant(Business restaurant) {
@@ -56,9 +64,13 @@ public class FirebaseRestaurantViewHolder extends RecyclerView.ViewHolder implem
     }
 
     @Override
-    public void onClick(View view) {
+    public void onItemSelected() {
+        Log.d(TAG, "onItemSelected: Selected -------------------");
+    }
 
-
+    @Override
+    public void onItemClear() {
+        Log.d(TAG, "onItemClear: Cleared -----------------------");
 
     }
 }

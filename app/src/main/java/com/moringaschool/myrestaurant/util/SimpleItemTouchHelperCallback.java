@@ -1,9 +1,13 @@
 package com.moringaschool.myrestaurant.util;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
-public class SimpleItemTouchHelperCallback extends ItemTouchHelper.Callback {
+public class SimpleItemTouchHelperCallback
+        extends ItemTouchHelper.Callback {
+
     private final ItemTouchHelperAdapter mAdapter;
 
     //  This constructor takes an ItemTouchHelperAdapter parameter. When implemented in
@@ -61,5 +65,31 @@ public class SimpleItemTouchHelperCallback extends ItemTouchHelper.Callback {
     @Override
     public void onSwiped(RecyclerView.ViewHolder viewHolder, int i) {
         mAdapter.onItemDismiss(viewHolder.getAdapterPosition());
+    }
+
+//    The following methods will be used to trigger the methods in the itemTouchHelperViewHolder interface
+    @Override
+    public void onSelectedChanged(@Nullable RecyclerView.ViewHolder viewHolder, int actionState) {
+
+        if ( actionState != ItemTouchHelper.ACTION_STATE_IDLE ){
+            if ( viewHolder instanceof ItemTouchHelperViewHolder ){
+
+                ItemTouchHelperViewHolder itemTouchHelperViewHolder = (ItemTouchHelperViewHolder) viewHolder;
+                itemTouchHelperViewHolder.onItemSelected();
+            }
+        }
+        super.onSelectedChanged(viewHolder, actionState);
+    }
+
+    @Override
+    public void clearView(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder) {
+        super.clearView(recyclerView, viewHolder);
+
+        if ( viewHolder instanceof ItemTouchHelperViewHolder ){
+
+            ItemTouchHelperViewHolder itemTouchHelperViewHolder = (ItemTouchHelperViewHolder) viewHolder;
+            itemTouchHelperViewHolder.onItemClear();
+        }
+
     }
 }
