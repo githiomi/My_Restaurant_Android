@@ -39,6 +39,7 @@ import com.moringaschool.myrestaurant.util.SimpleItemTouchHelperCallback;
 
 
 import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -51,6 +52,8 @@ public class SavedRestaurantListActivity
     private FirebaseRestaurantListAdapter mFirebaseAdapter;
     private ItemTouchHelper mItemTouchHelper;
     private OnStartDragListener onStartDragListener = this;
+
+    public ArrayList<Business> restaurants;
 
 //    indexing
     private Query mQuery;
@@ -68,7 +71,7 @@ public class SavedRestaurantListActivity
         mNameTextView.setVisibility(View.GONE);
         getSupportActionBar().setTitle("Saved Restaurants");
 
-        final ArrayList<Business> restaurants = new ArrayList<>();
+        restaurants = new ArrayList<>();
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         String username = user.getDisplayName();
 
@@ -82,7 +85,6 @@ public class SavedRestaurantListActivity
                 .build();
 
         mFirebaseAdapter = new FirebaseRestaurantListAdapter(restaurants, options, mQuery, onStartDragListener, SavedRestaurantListActivity.this);
-
 
         mQuery.addValueEventListener(new ValueEventListener() {
             @Override
@@ -106,6 +108,9 @@ public class SavedRestaurantListActivity
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                showRestaurants();
+                getSupportActionBar().setTitle("Error!");
 
             }
         });

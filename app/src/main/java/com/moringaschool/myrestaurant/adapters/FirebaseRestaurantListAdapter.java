@@ -33,6 +33,7 @@ import com.moringaschool.myrestaurant.models.Business;
 import com.moringaschool.myrestaurant.models.Constants;
 import com.moringaschool.myrestaurant.models.Restaurant;
 import com.moringaschool.myrestaurant.ui.RestaurantDetailActivity;
+import com.moringaschool.myrestaurant.ui.RestaurantDetailFragment;
 import com.moringaschool.myrestaurant.util.ItemTouchHelperAdapter;
 import com.moringaschool.myrestaurant.util.ItemTouchHelperViewHolder;
 import com.moringaschool.myrestaurant.util.OnStartDragListener;
@@ -119,6 +120,18 @@ public class FirebaseRestaurantListAdapter
                 return false;
             }
         });
+
+        viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent toRestaurantDetailFragment = new Intent(mContext, RestaurantDetailActivity.class);
+                toRestaurantDetailFragment.putExtra("position", viewHolder.getAdapterPosition());
+                toRestaurantDetailFragment.putExtra("restaurants", Parcels.wrap(mRestaurants));
+                mContext.startActivity(toRestaurantDetailFragment);
+
+            }
+        });
     }
 
     @Override
@@ -136,11 +149,12 @@ public class FirebaseRestaurantListAdapter
 
     @Override
     public void onItemDismiss(int position) {
-        getRef(position).removeValue();
         mRestaurants.remove(position);
-
+        getRef(position).removeValue();
     }
 
+
+//    This custom method is meant to update the index of each restaurant in the array list
     private void setIndexInFirebase() {
 
         for (Business restaurant : mRestaurants) {
