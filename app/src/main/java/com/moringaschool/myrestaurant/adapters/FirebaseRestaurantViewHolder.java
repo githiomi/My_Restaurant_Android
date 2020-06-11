@@ -63,14 +63,23 @@ public class FirebaseRestaurantViewHolder
         ratingTextView.setText("Rating: " + restaurant.getRating() + "/5");
     }
 
+//    Overriding the methods from the item touch helper view holder interface
     @Override
     public void onItemSelected() {
         Log.d(TAG, "onItemSelected: Selected -------------------");
+        itemView.animate()
+                .alpha(0.7f)
+                .scaleX(0.9f)
+                .scaleY(0.9f)
+                .setDuration(500);
     }
 
     @Override
     public void onItemClear() {
         Log.d(TAG, "onItemClear: Cleared -----------------------");
-
+        itemView.animate()
+                .alpha(1f)
+                .scaleX(1f)
+                .scaleY(1f);
     }
 }
