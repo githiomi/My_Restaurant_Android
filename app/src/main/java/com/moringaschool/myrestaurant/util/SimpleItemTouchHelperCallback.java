@@ -54,7 +54,7 @@ public class SimpleItemTouchHelperCallback
         if (source.getItemViewType() != target.getItemViewType()) {
             return false;
         }
-        mAdapter.onItemMove(source.getAdapterPosition(), target.getAdapterPosition());
+        mAdapter.onItemMove((source.getAdapterPosition()), (target.getAdapterPosition()));
         return true;
     }
 

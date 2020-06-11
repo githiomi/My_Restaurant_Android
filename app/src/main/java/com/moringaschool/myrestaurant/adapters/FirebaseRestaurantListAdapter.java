@@ -149,6 +149,7 @@ public class FirebaseRestaurantListAdapter
 
     @Override
     public void onItemDismiss(int position) {
+
         mRestaurants.remove(position);
         getRef(position).removeValue();
     }
@@ -168,14 +169,10 @@ public class FirebaseRestaurantListAdapter
 
 
     public class SavedRestaurantViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        @BindView(R.id.restaurantImageView)
-        public ImageView mRestaurantImageView;
-        @BindView(R.id.restaurantNameTextView)
-        TextView mNameTextView;
-        @BindView(R.id.categoryTextView)
-        TextView mCategoryTextView;
-        @BindView(R.id.ratingTextView)
-        TextView mRatingTextView;
+        @BindView(R.id.restaurantImageView) public ImageView mRestaurantImageView;
+        @BindView(R.id.restaurantNameTextView) TextView mNameTextView;
+        @BindView(R.id.categoryTextView) TextView mCategoryTextView;
+        @BindView(R.id.ratingTextView) TextView mRatingTextView;
         private Context mContext;
 
         public SavedRestaurantViewHolder(@NonNull View itemView) {
@@ -202,35 +199,6 @@ public class FirebaseRestaurantListAdapter
             mContext.startActivity(intent);
 
         }
-
-//        @Override
-//        public void onItemSelected() {
-//            Log.d("Animation", "onItemSelected");
-////            itemView.animate()
-////                    .alpha(0.7f)
-////                    .scaleX(0.9f)
-////                    .scaleY(0.9f)
-////                    .setDuration(500);
-//            AnimatorSet set = (AnimatorSet) AnimatorInflater.loadAnimator(mContext,
-//                    R.animator.drag_scale_on);
-//            set.setTarget(itemView);
-//            set.start();
-//
-//        }
-//
-//        @Override
-//        public void onItemClear() {
-//            Log.d("Animation", "onItemClear");
-////            itemView.animate()
-////                    .alpha(1f)
-////                    .scaleX(1f)
-////                    .scaleY(1f);
-//            AnimatorSet set = (AnimatorSet) AnimatorInflater.loadAnimator(mContext,
-//                    R.animator.drag_scale_off);
-//            set.setTarget(itemView);
-//            set.start();
-//
-//        }
     }
 
     @Override
