@@ -127,14 +127,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mEditor.putString(Constants.NAME_KEY, name).apply();
     }
 
-    public void storeNewInFirebaseDatabase(String name){
-        mDatabaseUsernameReference.setValue(name);
-    }
-
-    public void appendDataInFirebaseDatabase(String name){
-        mDatabaseUsernameReference.push().setValue(name);
-    }
-
     @Override
     protected void onDestroy(){
         super.onDestroy();

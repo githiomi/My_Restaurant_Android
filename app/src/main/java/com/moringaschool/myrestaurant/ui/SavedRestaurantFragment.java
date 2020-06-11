@@ -103,6 +103,14 @@ public class SavedRestaurantFragment
 
         mFirebaseAdapter = new FirebaseRestaurantListAdapter(restaurants, options, mQuery, mOnStartDragListener, mContext);
 
+        mFirebaseAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
+            @Override
+            public void onItemRangeInserted(int positionStart, int itemCount) {
+                super.onItemRangeInserted(positionStart, itemCount);
+                mFirebaseAdapter.notifyDataSetChanged();
+            }
+        });
+
         mQuery.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -149,6 +157,12 @@ public class SavedRestaurantFragment
 //    Custom method for the on start drag (implementation)
     @Override
     public void onStartDrag(RecyclerView.ViewHolder viewHolder) {
+        mItemTouchHelper.startDrag(viewHolder);
+    }
 
+    @Override
+    //method is now public
+    public void onDestroy() {
+        super.onDestroy();
     }
 }
