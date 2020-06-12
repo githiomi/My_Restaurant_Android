@@ -49,7 +49,7 @@ public class SavedRestaurantFragment
 //    Local variables
     private FirebaseRestaurantListAdapter mFirebaseAdapter;
     private ItemTouchHelper mItemTouchHelper;
-    private ArrayList<Business> restaurants;
+    private ArrayList<Business> restaurants = new ArrayList<>();
     private Query mQuery;
     private OnStartDragListener mOnStartDragListener;
 
@@ -80,15 +80,18 @@ public class SavedRestaurantFragment
         ButterKnife.bind(this, view);
 
 //        Method to set up firebase and get saved restaurants
-        setUpFirebase();
-
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                setUpFirebase();
+            }
+        });
         return view;
     }
 
 //    custom method to get firebase database restaurants
     private void setUpFirebase() {
 
-        restaurants = new ArrayList<>();
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         String username = user.getDisplayName();
 
@@ -97,29 +100,29 @@ public class SavedRestaurantFragment
                 .child(username)
                 .orderByChild(Constants.FIREBASE_QUERY_INDEX);
 
-        FirebaseRecyclerOptions<Business> options = new FirebaseRecyclerOptions.Builder<Business>()
-                .setQuery(mQuery, Business.class)
-                .build();
-
-        mFirebaseAdapter = new FirebaseRestaurantListAdapter(restaurants, options, mQuery, mOnStartDragListener, mContext);
-
-        mFirebaseAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
-            @Override
-            public void onItemRangeInserted(int positionStart, int itemCount) {
-                super.onItemRangeInserted(positionStart, itemCount);
-                mFirebaseAdapter.notifyDataSetChanged();
-            }
-        });
-
-        mQuery.addValueEventListener(new ValueEventListener() {
+        mQuery.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    restaurants.add(snapshot.getValue(Business.class));
+                for ( DataSnapshot dataSnapshot1 : dataSnapshot.getChildren() ){
+                    restaurants.add( dataSnapshot1.getValue(Business.class) );
                 }
 
-                if ( restaurants.size() > 0 ) {
+                if (restaurants.size() > 0) {
+
+                    FirebaseRecyclerOptions<Business> options = new FirebaseRecyclerOptions.Builder<Business>()
+                            .setQuery(mQuery, Business.class)
+                            .build();
+
+                    mFirebaseAdapter = new FirebaseRestaurantListAdapter(restaurants, options, mQuery, mOnStartDragListener, mContext);
+
+                    mFirebaseAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
+                        @Override
+                        public void onItemRangeInserted(int positionStart, int itemCount) {
+                            super.onItemRangeInserted(positionStart, itemCount);
+                            mFirebaseAdapter.notifyDataSetChanged();
+                        }
+                    });
 
                     LinearLayoutManager linearLayoutManager = new LinearLayoutManager(mContext);
 
@@ -134,7 +137,7 @@ public class SavedRestaurantFragment
 
                     showRestaurants();
 
-                }else {
+                } else {
                     mInCase.setVisibility(View.VISIBLE);
                     mRecyclerView.setVisibility(View.GONE);
                 }
@@ -142,10 +145,8 @@ public class SavedRestaurantFragment
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-
                 showRestaurants();
                 mContext.getActionBar().setTitle("Error!");
-
             }
         });
     }

@@ -54,6 +54,7 @@ public class FirebaseRestaurantListAdapter
         extends FirebaseRecyclerAdapter<Business, FirebaseRestaurantViewHolder>
         implements ItemTouchHelperAdapter {
 
+    private static final String TAG = FirebaseRestaurantListAdapter.class.getSimpleName();
     private ArrayList<Business> mRestaurants;
     private ChildEventListener mChildEventListener;
     private Context mContext;
@@ -77,6 +78,7 @@ public class FirebaseRestaurantListAdapter
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                 mRestaurants.add(dataSnapshot.getValue(Business.class));
+                Log.d(TAG, "onDataChange: --------------------- length: " + mRestaurants.size());
             }
 
             @Override
@@ -152,7 +154,6 @@ public class FirebaseRestaurantListAdapter
 
     @Override
     public void onItemDismiss(int position) {
-
         mRestaurants.remove(position);
         getRef(position).removeValue();
     }
@@ -162,7 +163,9 @@ public class FirebaseRestaurantListAdapter
     private void setIndexInFirebase() {
 
         for (Business restaurant : mRestaurants) {
+            Log.d(TAG, "onDataChange: --------------------- length in set Index: " + mRestaurants.size());
             int index = mRestaurants.indexOf(restaurant);
+            Log.d(TAG, "onDataChange: --------------------- length: " + index);
             DatabaseReference ref = getRef(index);
             restaurant.setIndex(Integer.toString(index));
             ref.setValue(restaurant);
