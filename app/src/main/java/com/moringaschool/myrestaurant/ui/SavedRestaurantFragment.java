@@ -52,6 +52,7 @@ public class SavedRestaurantFragment
     private ArrayList<Business> restaurants = new ArrayList<>();
     private Query mQuery;
     private OnStartDragListener mOnStartDragListener;
+    String username;
 
 //    Global context variable
     private FragmentActivity mContext;
@@ -93,7 +94,7 @@ public class SavedRestaurantFragment
     private void setUpFirebase() {
 
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        String username = user.getDisplayName();
+        username = user.getDisplayName();
 
         mQuery = FirebaseDatabase.getInstance()
                 .getReference(Constants.FIREBASE_CHILD_RESTAURANTS)
@@ -114,7 +115,7 @@ public class SavedRestaurantFragment
                             .setQuery(mQuery, Business.class)
                             .build();
 
-                    mFirebaseAdapter = new FirebaseRestaurantListAdapter(restaurants, options, mQuery, mOnStartDragListener, mContext);
+                    mFirebaseAdapter = new FirebaseRestaurantListAdapter(restaurants, username, options, mQuery, mOnStartDragListener, mContext);
 
                     mFirebaseAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
                         @Override

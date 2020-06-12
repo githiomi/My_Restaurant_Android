@@ -60,16 +60,17 @@ public class FirebaseRestaurantListAdapter
     private Context mContext;
     private OnStartDragListener mOnStartDragListener;
     private DatabaseReference mRef;
-    private Query mQuery;
+    private String username;
 
     public FirebaseRestaurantListAdapter(ArrayList<Business> restaurants,
+                                         String username,
                                          FirebaseRecyclerOptions<Business> options,
                                          Query query,
                                          OnStartDragListener onStartDragListener,
                                          Context context) {
         super(options);
         this.mRestaurants = restaurants;
-        this.mQuery = query;
+        this.username = username;
         this.mRef = query.getRef();
         this.mOnStartDragListener = onStartDragListener;
         this.mContext = context;
@@ -78,7 +79,6 @@ public class FirebaseRestaurantListAdapter
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                 mRestaurants.add(dataSnapshot.getValue(Business.class));
-                Log.d(TAG, "onDataChange: --------------------- length: " + mRestaurants.size());
             }
 
             @Override
@@ -163,12 +163,12 @@ public class FirebaseRestaurantListAdapter
     private void setIndexInFirebase() {
 
         for (Business restaurant : mRestaurants) {
-            Log.d(TAG, "onDataChange: --------------------- length in set Index: " + mRestaurants.size());
+            String restaurantId=restaurant.getPushId();
+            DatabaseReference mRestaurantReference = FirebaseDatabase.getInstance().getReference(Constants.FIREBASE_CHILD_RESTAURANTS).child(username).child(restaurantId);
             int index = mRestaurants.indexOf(restaurant);
-            Log.d(TAG, "onDataChange: --------------------- length: " + index);
-            DatabaseReference ref = getRef(index);
+            mRestaurantReference.getRef();
             restaurant.setIndex(Integer.toString(index));
-            ref.setValue(restaurant);
+            mRef.setValue(restaurant);
         }
 
     }
@@ -233,6 +233,6 @@ public class FirebaseRestaurantListAdapter
     @Override
     public void stopListening() {
         super.stopListening();
-        mQuery.removeEventListener(mChildEventListener);
+        mRef.removeEventListener(mChildEventListener);
     }
 }
