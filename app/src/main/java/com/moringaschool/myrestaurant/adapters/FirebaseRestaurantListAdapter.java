@@ -204,7 +204,7 @@ public class FirebaseRestaurantListAdapter
         private void createSavedDetailFragment(int position) {
 
             if ( mOrientation == Configuration.ORIENTATION_LANDSCAPE ){
-                RestaurantDetailFragment restaurantDetailFragment = RestaurantDetailFragment.newInstance(mRestaurants, position);
+                RestaurantDetailFragment restaurantDetailFragment = RestaurantDetailFragment.newInstance(mRestaurants, position, Constants.SOURCE_SAVED);
                 FragmentTransaction fragmentTransaction = ((FragmentActivity)mContext).getSupportFragmentManager().beginTransaction();
                 fragmentTransaction.replace(R.id.restaurantDetailContainer, restaurantDetailFragment);
                 fragmentTransaction.commit();
@@ -221,6 +221,7 @@ public class FirebaseRestaurantListAdapter
                 Intent intent = new Intent(mContext, RestaurantDetailActivity.class);
                 intent.putExtra("position", itemPosition);
                 intent.putExtra("restaurants", Parcels.wrap(mRestaurants));
+                intent.putExtra(Constants.KEY_SOURCE, Constants.SOURCE_SAVED);
                 mContext.startActivity(intent);
             }
         }

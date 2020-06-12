@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.moringaschool.myrestaurant.models.Business;
 import com.moringaschool.myrestaurant.R;
+import com.moringaschool.myrestaurant.models.Constants;
 import com.moringaschool.myrestaurant.ui.RestaurantDetailActivity;
 import com.moringaschool.myrestaurant.ui.RestaurantDetailFragment;
 import com.moringaschool.myrestaurant.util.OnRestaurantSelectedListener;
@@ -107,7 +108,7 @@ public class RestaurantListAdapter extends RecyclerView.Adapter<RestaurantListAd
 //        Custom method
         private void createDetailFragment(int position) {
 
-            RestaurantDetailFragment restaurantDetailFragment = RestaurantDetailFragment.newInstance(mRestaurants, position);
+            RestaurantDetailFragment restaurantDetailFragment = RestaurantDetailFragment.newInstance(mRestaurants, position, Constants.SOURCE_FIND);
             FragmentTransaction fragmentTransaction = ((FragmentActivity)mContext).getSupportFragmentManager().beginTransaction();
             fragmentTransaction.replace(R.id.restaurantDetailContainer, restaurantDetailFragment);
             fragmentTransaction.commit();
@@ -120,7 +121,7 @@ public class RestaurantListAdapter extends RecyclerView.Adapter<RestaurantListAd
             int itemPosition = getLayoutPosition();
 
             // calling the interface method to to pass int the position and the arraylist
-            mOnRestaurantSelectedListener.onRestaurantSelected(itemPosition, mRestaurants);
+            mOnRestaurantSelectedListener.onRestaurantSelected(itemPosition, mRestaurants, Constants.SOURCE_FIND);
 
             if ( mOrientation == Configuration.ORIENTATION_LANDSCAPE){
                 createDetailFragment(itemPosition);
@@ -128,6 +129,7 @@ public class RestaurantListAdapter extends RecyclerView.Adapter<RestaurantListAd
                 Intent intent = new Intent(mContext, RestaurantDetailActivity.class);
                 intent.putExtra("position", itemPosition);
                 intent.putExtra("restaurants", Parcels.wrap(mRestaurants));
+                intent.putExtra(Constants.KEY_SOURCE, Constants.SOURCE_FIND);
                 mContext.startActivity(intent);
             }
         }

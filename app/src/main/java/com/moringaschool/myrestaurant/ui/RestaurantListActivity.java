@@ -37,6 +37,7 @@ public class RestaurantListActivity
 //    Variables to store the position and list of restaurants in the interface
     private List<Business> mAllBusinesses;
     private Integer mPosition;
+    private String mSource;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,11 +61,14 @@ public class RestaurantListActivity
             if ( mOrientation == Configuration.ORIENTATION_LANDSCAPE) {
                         mPosition = savedInstanceState.getInt(Constants.EXTRA_KEY_POSITION);
                         mAllBusinesses = Parcels.unwrap(savedInstanceState.getParcelable(Constants.EXTRA_KEY_RESTAURANTS));
+                        mSource = savedInstanceState.getString(Constants.KEY_SOURCE);
 
                         if ( mPosition != null & mAllBusinesses != null ){
                             Intent toRestaurantDetailActivity = new Intent(this, RestaurantDetailActivity.class);
                             toRestaurantDetailActivity.putExtra(Constants.EXTRA_KEY_POSITION, mPosition);
                             toRestaurantDetailActivity.putExtra(Constants.EXTRA_KEY_RESTAURANTS, Parcels.wrap(mAllBusinesses));
+                            toRestaurantDetailActivity.putExtra(Constants.KEY_SOURCE, mSource);
+                            startActivity(toRestaurantDetailActivity);
                         }
             }
         }
@@ -81,13 +85,15 @@ public class RestaurantListActivity
         if ( mPosition != null && mAllBusinesses !=  null ){
             outState.putInt(Constants.EXTRA_KEY_POSITION, mPosition);
             outState.putParcelable(Constants.EXTRA_KEY_RESTAURANTS, Parcels.wrap(mAllBusinesses));
+            outState.putString(Constants.KEY_SOURCE, mSource);
         }
     }
 
     //    Overriding the interface method to allow communication between fragment and activity
     @Override
-    public void onRestaurantSelected(Integer position, List<Business> restaurants) {
+    public void onRestaurantSelected(Integer position, List<Business> restaurants, String source) {
         this.mPosition = position;
         this.mAllBusinesses = restaurants;
+        this.mSource = source;
     }
 }

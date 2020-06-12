@@ -50,6 +50,7 @@ public class RestaurantDetailFragment extends Fragment implements View.OnClickLi
     private List<Business> mAllRestaurants;
     private Business mRestaurant;
     private int mPosition;
+    private String mSource;
 
     private static final int MAX_WIDTH = 400;
     private static final int MAX_HEIGHT = 300;
@@ -58,12 +59,13 @@ public class RestaurantDetailFragment extends Fragment implements View.OnClickLi
         // Required empty public constructor
     }
 
-    public static RestaurantDetailFragment newInstance(List<Business> allRestaurants, Integer position) {
+    public static RestaurantDetailFragment newInstance(List<Business> allRestaurants, Integer position, String source) {
         RestaurantDetailFragment restaurantDetailFragment = new RestaurantDetailFragment();
         Bundle args = new Bundle();
 
         args.putParcelable(Constants.EXTRA_KEY_RESTAURANTS, Parcels.wrap(allRestaurants));
         args.putInt(Constants.EXTRA_KEY_POSITION, position);
+        args.putString(Constants.KEY_SOURCE, source);
 
         restaurantDetailFragment.setArguments(args);
         return restaurantDetailFragment;
@@ -76,6 +78,7 @@ public class RestaurantDetailFragment extends Fragment implements View.OnClickLi
         mPosition = getArguments().getInt(Constants.EXTRA_KEY_POSITION);
 
         mRestaurant = mAllRestaurants.get(mPosition);
+        mSource = getArguments().getString(Constants.KEY_SOURCE);
 
     }
 
@@ -104,7 +107,11 @@ public class RestaurantDetailFragment extends Fragment implements View.OnClickLi
         mPhoneLabel.setOnClickListener(this);
         mAddressLabel.setOnClickListener(this);
 
-        mSaveRestaurantButton.setOnClickListener(this);
+        if ( mSource.equals(Constants.SOURCE_FIND) ) {
+            mSaveRestaurantButton.setOnClickListener(this);
+        }else {
+            mSaveRestaurantButton.setVisibility(View.GONE);
+        }
         
         return view;
     }

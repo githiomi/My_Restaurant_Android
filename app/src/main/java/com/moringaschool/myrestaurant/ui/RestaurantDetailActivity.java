@@ -1,6 +1,8 @@
 package com.moringaschool.myrestaurant.ui;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -19,12 +21,13 @@ import java.util.ArrayList;
 
 import butterknife.*;
 
-
-
 public class RestaurantDetailActivity extends AppCompatActivity {
     @BindView(R.id.viewPager) ViewPager mViewPager;
     private RestaurantPagerAdapter adapterViewPager;
     ArrayList<Business> mRestaurants = new ArrayList<>();
+
+//    To find the users location
+    private String mSource;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,8 +38,10 @@ public class RestaurantDetailActivity extends AppCompatActivity {
 
         int startingPosition = getIntent().getIntExtra(Constants.EXTRA_KEY_POSITION, 0);
         mRestaurants = Parcels.unwrap(getIntent().getParcelableExtra(Constants.EXTRA_KEY_RESTAURANTS));
+        mSource = getIntent().getStringExtra(Constants.KEY_SOURCE);
 
-        adapterViewPager = new RestaurantPagerAdapter(getSupportFragmentManager(), mRestaurants);
+
+        adapterViewPager = new RestaurantPagerAdapter(getSupportFragmentManager(), mRestaurants, mSource);
         mViewPager.setAdapter(adapterViewPager);
         mViewPager.setCurrentItem(startingPosition);
     }
