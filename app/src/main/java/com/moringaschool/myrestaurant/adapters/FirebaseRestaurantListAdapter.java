@@ -5,6 +5,7 @@ import android.animation.AnimatorSet;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -15,6 +16,8 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
@@ -167,12 +170,15 @@ public class FirebaseRestaurantListAdapter
 
     }
 
-
     public class SavedRestaurantViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+//        Binding widgets using Butter knife
         @BindView(R.id.restaurantImageView) public ImageView mRestaurantImageView;
         @BindView(R.id.restaurantNameTextView) TextView mNameTextView;
         @BindView(R.id.categoryTextView) TextView mCategoryTextView;
         @BindView(R.id.ratingTextView) TextView mRatingTextView;
+
+//        Local variables
+        private int mOrientation;
         private Context mContext;
 
         public SavedRestaurantViewHolder(@NonNull View itemView) {
@@ -180,6 +186,11 @@ public class FirebaseRestaurantListAdapter
             ButterKnife.bind(this, itemView);
             mContext = itemView.getContext();
             itemView.setOnClickListener(this);
+            mOrientation = itemView.getResources().getConfiguration().orientation;
+
+            if ( mOrientation == Configuration.ORIENTATION_LANDSCAPE ){
+                createSavedDetailFragment(0);
+            }
         }
 
         public void bindRestaurant(Business restaurant) {
@@ -189,15 +200,29 @@ public class FirebaseRestaurantListAdapter
             mRatingTextView.setText("Rating: " + restaurant.getRating() + "/5");
         }
 
+//        custom method to allow the flip orientation
+        private void createSavedDetailFragment(int position) {
+
+            if ( mOrientation == Configuration.ORIENTATION_LANDSCAPE ){
+                RestaurantDetailFragment restaurantDetailFragment = RestaurantDetailFragment.newInstance(mRestaurants, position);
+                FragmentTransaction fragmentTransaction = ((FragmentActivity)mContext).getSupportFragmentManager().beginTransaction();
+                fragmentTransaction.replace(R.id.restaurantDetailContainer, restaurantDetailFragment);
+                fragmentTransaction.commit();
+            }
+        }
 
         @Override
         public void onClick(View v) {
             int itemPosition = getLayoutPosition();
-            Intent intent = new Intent(mContext, RestaurantDetailActivity.class);
-            intent.putExtra("position", itemPosition);
-            intent.putExtra("restaurants", Parcels.wrap(mRestaurants));
-            mContext.startActivity(intent);
 
+            if ( mOrientation == Configuration.ORIENTATION_LANDSCAPE ){
+                createSavedDetailFragment(itemPosition);
+            }else {
+                Intent intent = new Intent(mContext, RestaurantDetailActivity.class);
+                intent.putExtra("position", itemPosition);
+                intent.putExtra("restaurants", Parcels.wrap(mRestaurants));
+                mContext.startActivity(intent);
+            }
         }
     }
 

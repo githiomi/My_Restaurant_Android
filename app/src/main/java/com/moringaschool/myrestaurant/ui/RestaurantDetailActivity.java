@@ -10,6 +10,7 @@ import androidx.viewpager.widget.ViewPager;
 import com.moringaschool.myrestaurant.models.Business;
 import com.moringaschool.myrestaurant.R;
 import com.moringaschool.myrestaurant.adapters.RestaurantPagerAdapter;
+import com.moringaschool.myrestaurant.models.Constants;
 import com.moringaschool.myrestaurant.models.Restaurant;
 
 import org.parceler.Parcels;
@@ -32,8 +33,8 @@ public class RestaurantDetailActivity extends AppCompatActivity {
 
         ButterKnife.bind(this);
 
-        int startingPosition = getIntent().getIntExtra("position", 0);
-        mRestaurants = Parcels.unwrap(getIntent().getParcelableExtra("restaurants"));
+        int startingPosition = getIntent().getIntExtra(Constants.EXTRA_KEY_POSITION, 0);
+        mRestaurants = Parcels.unwrap(getIntent().getParcelableExtra(Constants.EXTRA_KEY_RESTAURANTS));
 
         adapterViewPager = new RestaurantPagerAdapter(getSupportFragmentManager(), mRestaurants);
         mViewPager.setAdapter(adapterViewPager);

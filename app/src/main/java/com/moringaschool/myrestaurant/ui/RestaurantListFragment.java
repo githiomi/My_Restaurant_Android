@@ -28,6 +28,7 @@ import com.moringaschool.myrestaurant.models.Constants;
 import com.moringaschool.myrestaurant.models.YelpBusinessesSearchResponse;
 import com.moringaschool.myrestaurant.network.YelpApi;
 import com.moringaschool.myrestaurant.network.YelpClient;
+import com.moringaschool.myrestaurant.util.OnRestaurantSelectedListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,6 +48,9 @@ public class RestaurantListFragment extends Fragment {
     @BindView(R.id.recyclerView) RecyclerView mRecyclerView;
     @BindView(R.id.onlyTextView) TextView mInCase;
 
+//    Interface implementation
+    private OnRestaurantSelectedListener mOnRestaurantSelectedListener;
+
 //    Local variable
     private RestaurantListAdapter mAdapter;
     public List<Business> mRestaurants = new ArrayList<>();
@@ -57,6 +61,16 @@ public class RestaurantListFragment extends Fragment {
 
     public RestaurantListFragment() {
         // Required empty public constructor
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        try {
+            mOnRestaurantSelectedListener = (OnRestaurantSelectedListener) context;
+        }catch (ClassCastException e){
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -98,47 +112,52 @@ public class RestaurantListFragment extends Fragment {
 //    Custom method meant to retrieve restaurants using the location passed in
     private void getRestaurants(String mRecentAddress) {
 
-        String restaurants = "restaurants";
-
-        YelpApi yelpClient = YelpClient.getClient();
-
-        Call<YelpBusinessesSearchResponse> call = yelpClient.getRestaurants(mRecentAddress, restaurants);
-
-        call.enqueue(new Callback<YelpBusinessesSearchResponse>() {
+        getActivity().runOnUiThread(new Runnable() {
             @Override
-            public void onResponse(Call<YelpBusinessesSearchResponse> call, Response<YelpBusinessesSearchResponse> response) {
+            public void run() {
 
-                if (response.isSuccessful()) {
-                    mRestaurants = response.body().getBusinesses();
+                String restaurants = "restaurants";
 
-                    for (Business restaurant : mRestaurants) {
-                        Log.v(TAG, restaurant.getName());
+                YelpApi yelpClient = YelpClient.getClient();
+
+                Call<YelpBusinessesSearchResponse> call = yelpClient.getRestaurants(mRecentAddress, restaurants);
+
+                call.enqueue(new Callback<YelpBusinessesSearchResponse>() {
+                    @Override
+                    public void onResponse(Call<YelpBusinessesSearchResponse> call, Response<YelpBusinessesSearchResponse> response) {
+
+                        if (response.isSuccessful()) {
+                            mRestaurants = response.body().getBusinesses();
+
+                            for (Business restaurant : mRestaurants) {
+                                Log.v(TAG, restaurant.getName());
+                            }
+
+                            RestaurantListAdapter mAdapter;
+
+                            mAdapter = new RestaurantListAdapter(mContext, mRestaurants, mOnRestaurantSelectedListener);
+                            mRecyclerView.setAdapter(mAdapter);
+                            RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(mContext);
+                            mRecyclerView.setLayoutManager(layoutManager);
+                            mRecyclerView.setHasFixedSize(true);
+
+                            showRestaurants();
+                        } else {
+                            showUnsuccessfulMessage();
+                        }
                     }
 
-                    RestaurantListAdapter mAdapter;
-
-                    mAdapter = new RestaurantListAdapter( mContext, mRestaurants);
-                    mRecyclerView.setAdapter(mAdapter);
-                    RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(mContext);
-                    mRecyclerView.setLayoutManager(layoutManager);
-                    mRecyclerView.setHasFixedSize(true);
-
-                    showRestaurants();
-                } else {
-                    showUnsuccessfulMessage();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<YelpBusinessesSearchResponse> call, Throwable t) {
-                Log.e(TAG, "onFailure: ", t);
-                showFailureMessage();
+                    @Override
+                    public void onFailure(Call<YelpBusinessesSearchResponse> call, Throwable t) {
+                        Log.e(TAG, "onFailure: ", t);
+                        showFailureMessage();
+                    }
+                });
             }
         });
-
     }
 
-//    Search view widget overriden methods
+//    Search view widget over-ridden methods
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater menuInflater){
 

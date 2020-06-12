@@ -3,7 +3,6 @@ package com.moringaschool.myrestaurant.adapters;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,14 +16,13 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.moringaschool.myrestaurant.models.Business;
 import com.moringaschool.myrestaurant.R;
-import com.moringaschool.myrestaurant.models.Restaurant;
 import com.moringaschool.myrestaurant.ui.RestaurantDetailActivity;
 import com.moringaschool.myrestaurant.ui.RestaurantDetailFragment;
+import com.moringaschool.myrestaurant.util.OnRestaurantSelectedListener;
 import com.squareup.picasso.Picasso;
 
 import org.parceler.Parcels;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -35,15 +33,19 @@ public class RestaurantListAdapter extends RecyclerView.Adapter<RestaurantListAd
     private List<Business> mRestaurants;
     private Context mContext;
 
-    public RestaurantListAdapter(Context context, List<Business> restaurants){
+//        Interface initialization
+    private OnRestaurantSelectedListener mOnRestaurantSelectedListener;
+
+    public RestaurantListAdapter(Context context, List<Business> restaurants, OnRestaurantSelectedListener onRestaurantSelectedListener){
         mContext = context;
         mRestaurants = restaurants;
+        mOnRestaurantSelectedListener = onRestaurantSelectedListener;
     }
 
     @Override
     public RestaurantListAdapter.RestaurantViewHolder onCreateViewHolder(ViewGroup parent, int viewType){
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.restaurant_list_item_drag, parent, false);
-        RestaurantViewHolder viewHolder = new RestaurantViewHolder(view);
+        RestaurantViewHolder viewHolder = new RestaurantViewHolder(view, mRestaurants, mOnRestaurantSelectedListener);
         return viewHolder;
     }
 
@@ -67,13 +69,17 @@ public class RestaurantListAdapter extends RecyclerView.Adapter<RestaurantListAd
 //        Local variables
         private int mOrientation;
         private  Context mContext;
+        private List<Business> mAllRestaurants;
+        private OnRestaurantSelectedListener mOnRestaurantSelectedListener;
 
-        public RestaurantViewHolder(View itemView){
+        public RestaurantViewHolder(View itemView, List<Business> restaurants, OnRestaurantSelectedListener onRestaurantSelectedListener){
             super(itemView);
             ButterKnife.bind(this, itemView);
             mContext = itemView.getContext();
             itemView.setOnClickListener(this);
-            mOrientation = itemView.getResources().getConfiguration().orientation;
+            this.mOrientation = itemView.getResources().getConfiguration().orientation;
+            this.mAllRestaurants = restaurants;
+            this.mOnRestaurantSelectedListener = onRestaurantSelectedListener;
 
             if ( mOrientation == Configuration.ORIENTATION_LANDSCAPE ){
                 createDetailFragment(0);
@@ -112,6 +118,9 @@ public class RestaurantListAdapter extends RecyclerView.Adapter<RestaurantListAd
         @Override
         public void onClick(View v){
             int itemPosition = getLayoutPosition();
+
+            // calling the interface method to to pass int the position and the arraylist
+            mOnRestaurantSelectedListener.onRestaurantSelected(itemPosition, mRestaurants);
 
             if ( mOrientation == Configuration.ORIENTATION_LANDSCAPE){
                 createDetailFragment(itemPosition);
