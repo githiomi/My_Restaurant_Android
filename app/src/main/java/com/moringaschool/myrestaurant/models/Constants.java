@@ -20,6 +20,10 @@ public class Constants {
 //    Firebase indexing
     public static final String FIREBASE_QUERY_INDEX = "index";
 
+//    Changing layout to be flexible
+    public static final String EXTRA_KEY_POSITION = "position";
+    public static final String EXTRA_KEY_RESTAURANTS = "restaurants";
+
 
     public static FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
 }
