@@ -14,7 +14,7 @@ public class RestaurantPagerAdapter extends FragmentPagerAdapter {
 
     public RestaurantPagerAdapter(FragmentManager fm, List<Business> restaurants) {
         super(fm);
-        mRestaurants = restaurants;
+        this.mRestaurants = restaurants;
     }
 
     @Override
