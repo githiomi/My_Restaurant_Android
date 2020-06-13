@@ -2,10 +2,16 @@ package com.moringaschool.myrestaurant.ui;
 
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import androidx.fragment.app.Fragment;
+
+import android.provider.MediaStore;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -51,6 +57,8 @@ public class RestaurantDetailFragment extends Fragment implements View.OnClickLi
     private Business mRestaurant;
     private int mPosition;
     private String mSource;
+    // For the camera
+    private static final int REQUEST_IMAGE_CAPTURE = 111;
 
     private static final int MAX_WIDTH = 400;
     private static final int MAX_HEIGHT = 300;
@@ -80,6 +88,54 @@ public class RestaurantDetailFragment extends Fragment implements View.OnClickLi
         mRestaurant = mAllRestaurants.get(mPosition);
         mSource = getArguments().getString(Constants.KEY_SOURCE);
 
+        // To allow menu to be inflated
+        setHasOptionsMenu(true);
+    }
+
+    //    Methods to inflate the camera icon
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+
+        if ( mSource.equals(Constants.SOURCE_SAVED) ){
+            inflater.inflate(R.menu.menu_photo, menu);
+        }else{
+            inflater.inflate(R.menu.menu_main, menu);
+        }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch ( item.getItemId() ){
+            case R.id.action_photo : onLaunchCamera();
+            default : break;
+        }
+        return false;
+    }
+
+//    Custom method to launch the camera
+    private void onLaunchCamera() {
+        Intent openCamera = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+
+        if ( openCamera.resolveActivity(getActivity().getPackageManager()) != null ){
+            startActivityForResult(openCamera, REQUEST_IMAGE_CAPTURE);
+        }
+    }
+
+//    Result code after taking a photo
+
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if ( requestCode == REQUEST_IMAGE_CAPTURE && resultCode == getActivity().RESULT_OK ){
+
+            Bundle photoExtra = data.getExtras();
+            Bitmap bitmap = ( Bitmap ) photoExtra.get("data");
+            mImageLabel.setImageBitmap(bitmap);
+            // Meant to save the taken picture to firebase
+            //      encodeBitmapAndSaveToFirebase(imageBitmap);
+
+        }
     }
 
     @Override
